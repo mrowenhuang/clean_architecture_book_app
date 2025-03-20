@@ -1,5 +1,6 @@
+import 'package:book_app/core/config/app_theme.dart';
 import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:book_app/features/auth/presentation/pages/login_pages.dart';
+import 'package:book_app/features/auth/presentation/pages/login_page.dart';
 import 'package:book_app/firebase_options.dart';
 import 'package:book_app/injection.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,13 +21,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<AuthBloc>(),
+      create: (context) => sl<AuthBloc>()..add(CredentialAuthClickEvent()),
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-        home: LoginPages(),
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.appTheme(context),
+        home: LoginPage(),
       ),
     );
   }

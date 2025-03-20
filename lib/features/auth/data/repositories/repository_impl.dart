@@ -24,8 +24,6 @@ class RepositoryImpl extends AuthRepository {
       final response = await _remoteDatasource.loginAuth(email, password);
 
       return response.fold((l) => left(ServerFailure(message: l.message)), (r) {
-        final data = r.data() as Map<String, dynamic>;
-
         print(r.data());
 
         return right(UserModel.fromMap(r.data() as Map<String, dynamic>));

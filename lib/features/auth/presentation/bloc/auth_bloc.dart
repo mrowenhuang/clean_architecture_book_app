@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:book_app/features/auth/domain/entities/user_entities.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_credential.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_login.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_signup.dart';
@@ -18,20 +19,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     : super(AuthInitial()) {
     on<LoginClickAuthEvent>(loginClickAuthEvent);
     on<SignupClickAuthEvent>(signupClickAuthEvent);
+    on<CredentialAuthClickEvent>(credentialAuthClickEvent);
   }
 
   FutureOr<void> loginClickAuthEvent(
     LoginClickAuthEvent event,
     Emitter<AuthState> emit,
   ) async {
+    emit(LoadingLoginAuthState());
     final response = await _authLogin.call(event.email, event.password);
 
     response.fold(
       (l) {
-        print(l.message);
+        emit(ErrorLoginAuthState(message: l.message));
       },
       (r) {
-        print(r);
+        emit(SuccessLoginAuthState(user: r));
       },
     );
   }
@@ -54,5 +57,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         print(r);
       },
     );
+  }
+
+  FutureOr<void> credentialAuthClickEvent(
+    CredentialAuthClickEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    print( await _authCredential.call().first);
   }
 }

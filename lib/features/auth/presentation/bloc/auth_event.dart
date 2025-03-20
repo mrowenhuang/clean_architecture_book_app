@@ -25,3 +25,5 @@ final class SignupClickAuthEvent extends AuthEvent {
     required this.username,
   });
 }
+
+final class CredentialAuthClickEvent extends AuthEvent {}
