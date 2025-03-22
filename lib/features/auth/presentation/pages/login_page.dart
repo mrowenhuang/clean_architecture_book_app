@@ -1,22 +1,21 @@
 import 'package:book_app/common/navigator/app_navigator.dart';
 import 'package:book_app/core/config/app_color.dart';
 import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:book_app/features/auth/presentation/pages/signup_page.dart';
 import 'package:book_app/features/auth/presentation/widgets/title_password_text_field.dart';
 import 'package:book_app/features/auth/presentation/widgets/title_text_field.dart';
 import 'package:book_app/features/bookshelf/presentation/pages/home_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+  final TextEditingController emailC = TextEditingController();
+  final TextEditingController passC = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailC = TextEditingController();
-    final TextEditingController passC = TextEditingController();
-
     return Scaffold(
       backgroundColor: AppColor.secondary,
       body: SafeArea(
@@ -35,13 +34,21 @@ class LoginPage extends StatelessWidget {
               BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   if (state is SuccessLoginAuthState) {
-                    AppNavigator.push(context, HomePage());
+                    AppNavigator.pushRemove(context, HomePage());
+                  } else if (state is ErrorLoginAuthState) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
                   }
                 },
                 bloc: context.read<AuthBloc>(),
                 builder: (context, state) {
                   if (state is LoadingLoginAuthState) {
-                    ElevatedButton(
+                    return ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         fixedSize: Size(330, 50),
                         backgroundColor: AppColor.primary,
@@ -51,14 +58,6 @@ class LoginPage extends StatelessWidget {
                       ),
                       onPressed: null,
                       child: CupertinoActivityIndicator(),
-                    );
-                  } else if (state is ErrorLoginAuthState) {
-                    return Text(
-                      "Something was wrong",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
                     );
                   }
                   return ElevatedButton(
@@ -90,16 +89,18 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 15),
               Row(
                 children: [
-                  Text("don't have account", style: TextStyle(fontSize: 14)),
-                  TextButton(
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut();
+                  Spacer(),
+                  Text("don't have account ", style: TextStyle(fontSize: 14)),
+                  GestureDetector(
+                    onTap: () {
+                      AppNavigator.pushRemove(context, SignupPage());
                     },
                     child: Text(
                       "register",
                       style: TextStyle(fontSize: 14, color: Colors.blue),
                     ),
                   ),
+                  Spacer(),
                 ],
               ),
             ],

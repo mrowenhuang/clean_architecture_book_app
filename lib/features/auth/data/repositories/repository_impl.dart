@@ -1,5 +1,4 @@
 import 'package:book_app/core/failure/server_failure.dart';
-import 'package:book_app/core/success/server_success.dart';
 import 'package:book_app/features/auth/data/datasources/remote/remote_datasource.dart';
 import 'package:book_app/features/auth/data/models/user_model.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
@@ -16,25 +15,24 @@ class RepositoryImpl extends AuthRepository {
   Stream<User?> get credentialAuth => _remoteDatasource.getCredential;
 
   @override
-  Future<Either<ServerFailure, UserEntities>> loginAuth(
+  Future<Either<ServerFailure, UserCredential>> loginAuth(
     String email,
     String password,
   ) async {
     try {
       final response = await _remoteDatasource.loginAuth(email, password);
 
-      return response.fold((l) => left(ServerFailure(message: l.message)), (r) {
-        print(r.data());
-
-        return right(UserModel.fromMap(r.data() as Map<String, dynamic>));
-      });
+      return response.fold(
+        (l) => left(ServerFailure(message: l.message)),
+        (r) => right(r),
+      );
     } catch (e) {
       return left(ServerFailure(message: "Something went wrong"));
     }
   }
 
   @override
-  Future<Either<ServerFailure, ServerSuccess>> signupAuth(
+  Future<Either<ServerFailure, UserCredential>> signupAuth(
     String email,
     String password,
     String username,
@@ -45,13 +43,45 @@ class RepositoryImpl extends AuthRepository {
         password,
         username,
       );
-
       return response.fold(
         (l) => left(ServerFailure(message: l.message)),
-        (r) => right(ServerSuccess(message: r.message)),
+        (r) => right(r),
       );
     } catch (e) {
       return left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<void> signoutAuth() async {
+    await _remoteDatasource.signoutAuth();
+  }
+
+  @override
+  Future<Either<ServerFailure, UserEntities>> getAuth(String id) async {
+    try {
+      final response = await _remoteDatasource.getAuthData(id);
+
+      final userData = response.data() as Map<String, dynamic>;
+
+      return right(UserModel.fromMap(userData));
+    } catch (e) {
+      return left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<ServerFailure> addAuth(
+    String id,
+    String email,
+    String username,
+    String created,
+  ) async {
+    try {
+      await _remoteDatasource.addAuthData(id, email, created, username);
+      throw ServerFailure(message: "Failed Add Data");
+    } catch (e) {
+      return ServerFailure(message: e.toString());
     }
   }
 }

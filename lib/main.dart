@@ -1,6 +1,7 @@
 import 'package:book_app/core/config/app_theme.dart';
 import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:book_app/features/auth/presentation/pages/login_page.dart';
+import 'package:book_app/features/auth/presentation/pages/switch_page.dart';
 import 'package:book_app/firebase_options.dart';
 import 'package:book_app/injection.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.appTheme(context),
-        home: LoginPage(),
+        home: SwitchPage(),
       ),
     );
   }

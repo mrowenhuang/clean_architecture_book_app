@@ -9,10 +9,15 @@ abstract class AuthState extends Equatable {
 
 class AuthInitial extends AuthState {}
 
+// info : Loading
 final class LoadingLoginAuthState extends AuthState {}
 
 final class LoadingSignupAuthState extends AuthState {}
 
+final class LoadingCredentialAuthState extends AuthState {}
+
+
+// info : Success
 final class SuccessLoginAuthState extends AuthState {
   final UserEntities user;
 
@@ -22,6 +27,10 @@ final class SuccessLoginAuthState extends AuthState {
 
 final class SuccessSignupAuthState extends AuthState {}
 
+// final class SuccessCredential
+
+
+// info : Error
 final class ErrorLoginAuthState extends AuthState {
   final String message;
 
@@ -33,3 +42,7 @@ final class ErrorSignupAuthState extends AuthState {
 
   const ErrorSignupAuthState({required this.message});
 }
+
+// info : Failed
+
+final class FailedCredentialAuthState extends AuthState {}

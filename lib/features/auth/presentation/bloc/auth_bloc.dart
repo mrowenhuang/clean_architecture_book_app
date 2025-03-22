@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:book_app/core/failure/server_failure.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
+import 'package:book_app/features/auth/domain/usecases/auth_add.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_credential.dart';
+import 'package:book_app/features/auth/domain/usecases/auth_get.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_login.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_signup.dart';
 import 'package:equatable/equatable.dart';
@@ -13,10 +16,17 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthLogin _authLogin;
   final AuthSignup _authSignup;
-  final AuthCredential _authCredential;
+  final AuthCredentials _authCredential;
+  final AuthGet _authGet;
+  final AuthAdd _authAdd;
 
-  AuthBloc(this._authLogin, this._authSignup, this._authCredential)
-    : super(AuthInitial()) {
+  AuthBloc(
+    this._authLogin,
+    this._authSignup,
+    this._authCredential,
+    this._authGet,
+    this._authAdd,
+  ) : super(AuthInitial()) {
     on<LoginClickAuthEvent>(loginClickAuthEvent);
     on<SignupClickAuthEvent>(signupClickAuthEvent);
     on<CredentialAuthClickEvent>(credentialAuthClickEvent);
@@ -28,13 +38,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(LoadingLoginAuthState());
     final response = await _authLogin.call(event.email, event.password);
-
-    response.fold(
-      (l) {
-        emit(ErrorLoginAuthState(message: l.message));
+    await response.fold(
+      (failure) {
+        emit(ErrorLoginAuthState(message: failure.message));
       },
-      (r) {
-        emit(SuccessLoginAuthState(user: r));
+      (response2) async {
+        final userData = await _authGet.call(response2.user!.uid);
+        await userData.fold(
+          (failure) async {
+            emit(ErrorLoginAuthState(message: failure.message));
+          },
+          (response) async {
+            emit(SuccessLoginAuthState(user: response));
+          },
+        );
       },
     );
   }
@@ -43,18 +60,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignupClickAuthEvent event,
     Emitter<AuthState> emit,
   ) async {
+    emit(LoadingSignupAuthState());
     final response = await _authSignup.call(
       event.email,
       event.password,
       event.username,
     );
-
-    response.fold(
-      (l) {
-        print(l.message);
+    await response.fold(
+      (failure) async {
+        emit(ErrorSignupAuthState(message: failure.message));
       },
-      (r) {
-        print(r);
+      (response) async {
+        try {
+          await _authAdd.call(
+            response.user!.uid,
+            event.email,
+            event.username,
+            response.user!.metadata.creationTime!.toIso8601String(),
+          );
+          emit(SuccessSignupAuthState());
+        } catch (e) {
+          emit(ErrorSignupAuthState(message: e.toString()));
+        }
       },
     );
   }
@@ -63,6 +90,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     CredentialAuthClickEvent event,
     Emitter<AuthState> emit,
   ) async {
-    print( await _authCredential.call().first);
+    await for (var authEvent in _authCredential.call()) {
+      print(authEvent);
+      if (authEvent != null) {
+        final userData = await _authGet.call(authEvent.uid);
+        await userData.fold(
+          (failure) async {
+            emit(FailedCredentialAuthState());
+          },
+          (response) async {
+            emit(SuccessLoginAuthState(user: response));
+          },
+        );
+      } else {
+        emit(FailedCredentialAuthState());
+      }
+    }
   }
 }

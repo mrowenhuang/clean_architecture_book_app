@@ -1,20 +1,20 @@
 import 'package:book_app/core/failure/server_failure.dart';
-import 'package:book_app/core/success/server_success.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class RemoteDatasource {
   Stream<User?> get getCredential;
-  Future<Either<ServerFailure, DocumentSnapshot>> loginAuth(
+  Future<Either<ServerFailure, UserCredential>> loginAuth(
     String email,
     String password,
   );
-  Future<Either<ServerFailure, ServerSuccess>> signupAuth(
+  Future<Either<ServerFailure, UserCredential>> signupAuth(
     String email,
     String password,
     String username,
   );
+  Future<void> signoutAuth();
   Future<void> addAuthData(
     String id,
     String email,
@@ -26,33 +26,25 @@ abstract class RemoteDatasource {
 
 class RemoteDatasourceImpl extends RemoteDatasource {
   final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
-  RemoteDatasourceImpl(this._firestore);
+  RemoteDatasourceImpl(this._firestore, this._firebaseAuth);
 
   @override
   // TODO: implement getCredential
-  Stream<User?> get getCredential => FirebaseAuth.instance.authStateChanges();
+  Stream<User?> get getCredential => _firebaseAuth.authStateChanges();
 
   @override
-  Future<Either<ServerFailure, DocumentSnapshot>> loginAuth(
+  Future<Either<ServerFailure, UserCredential>> loginAuth(
     String email,
     String password,
   ) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final credential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-
-      final userData = credential.user;
-
-      try {
-        final data = await getAuthData(userData!.uid);
-
-        return right(data);
-      } catch (e) {
-        return left(ServerFailure(message: e.toString()));
-      }
+      return right(credential);
     } on FirebaseAuthException catch (e) {
       return left(ServerFailure(message: e.code));
     } catch (e) {
@@ -61,31 +53,28 @@ class RemoteDatasourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<Either<ServerFailure, ServerSuccess>> signupAuth(
+  Future<Either<ServerFailure, UserCredential>> signupAuth(
     String email,
     String password,
     String username,
   ) async {
     try {
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      final userData = credential.user;
-      try {
-        await addAuthData(
-          userData!.uid,
-          email,
-          userData.metadata.creationTime.toString(),
-          username,
-        );
-        return right(ServerSuccess(message: "success"));
-      } catch (e) {
-        return left(ServerFailure(message: e.toString()));
-      }
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      return right(credential);
     } on FirebaseAuthException catch (e) {
       return left(ServerFailure(message: e.code));
     } catch (e) {
       return left(ServerFailure(message: "Something Wrong"));
     }
+  }
+
+  @override
+  Future<void> signoutAuth() async {
+    await _firebaseAuth.signOut();
   }
 
   @override
