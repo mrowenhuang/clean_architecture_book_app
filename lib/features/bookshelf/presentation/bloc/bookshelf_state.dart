@@ -9,16 +9,30 @@ abstract class BookshelfState extends Equatable {
 
 class BookshelfInitial extends BookshelfState {}
 
-final class SuccessGetQuotes extends BookshelfState {
+final class SuccessGetQuotesState extends BookshelfState {
   final QuotesEntities quotes;
 
-  const SuccessGetQuotes(this.quotes);
+  const SuccessGetQuotesState(this.quotes);
 }
 
-final class ErrorGetQuotes extends BookshelfState {
+final class SuccessGetTrendingBook extends BookshelfState {
+  final List<FeatureBookEntities> books;
+
+  const SuccessGetTrendingBook(this.books);
+}
+
+final class ErrorGetQuotesState extends BookshelfState {
   final ServerFailure failure;
 
-  const ErrorGetQuotes(this.failure);
+  const ErrorGetQuotesState(this.failure);
 }
 
-final class LoadingGetQuotes extends BookshelfState {}
+final class ErrorGetTrendingBookState extends BookshelfState {
+  final ServerFailure failure;
+
+  const ErrorGetTrendingBookState(this.failure);
+}
+
+final class LoadingGetQuotesState extends BookshelfState {}
+
+final class LoadingGetTrendingBookState extends BookshelfState {}

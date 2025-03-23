@@ -4,17 +4,16 @@ import 'package:book_app/features/bookshelf/domain/entities/quotes_entities.dart
 
 // ignore: must_be_immutable
 class QuotesModel extends QuotesEntities {
-  QuotesModel({super.author, super.id, super.quote});
+  QuotesModel({super.author, super.quote});
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'id': id, 'quote': quote, 'author': author};
+    return <String, dynamic>{ 'q': quote, 'a': author};
   }
 
   factory QuotesModel.fromMap(Map<String, dynamic> map) {
     return QuotesModel(
-      id: map['id'] != null ? map['id'] as int : null,
-      quote: map['quote'] != null ? map['quote'] as String : null,
-      author: map['author'] != null ? map['author'] as String : null,
+      quote: map['q'] != null ? map['q'] as String : null,
+      author: map['a'] != null ? map['a'] as String : null,
     );
   }
 

@@ -9,3 +9,5 @@ abstract class BookshelfEvent extends Equatable {
 
 
 final class GetQuotesEvent extends BookshelfEvent {}
+
+final class GetTrendingBookEvent extends BookshelfEvent {}

@@ -17,7 +17,7 @@ void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
 
   // await RemoteDatasourceImpl().getTrendingBook();
-  final resp = await BookRepositoryImpl(RemoteDatasourceImpl()).getQuotes();
+  final resp = await BookRepositoryImpl(BookRemoteDatasourceImpl()).getQuotes();
 
   resp.fold((l) {
     print(l.message);

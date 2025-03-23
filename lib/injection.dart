@@ -26,7 +26,7 @@ Future<void> initializeDependecies() async {
 
   // info : BLOC
   sl.registerFactory(() => AuthBloc(sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory(() => BookshelfBloc(sl()));
+  sl.registerFactory(() => BookshelfBloc(sl(),sl()));
   sl.registerFactory(() => IndicatorCubit());
 
   // info : USECASE
