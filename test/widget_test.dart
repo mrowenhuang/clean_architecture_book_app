@@ -17,7 +17,13 @@ void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
 
   // await RemoteDatasourceImpl().getTrendingBook();
-  await BookRepositoryImpl(RemoteDatasourceImpl()).getTrendingBook();
+  final resp = await BookRepositoryImpl(RemoteDatasourceImpl()).getQuotes();
+
+  resp.fold((l) {
+    print(l.message);
+  }, (r) {
+    print(r);
+  },);
 
   // await RemoteDatasourceImpl(FirebaseFirestore.instance).addAuthData("owen@gmail.com", "12312", "owen");
 }

@@ -34,7 +34,7 @@ class LoginPage extends StatelessWidget {
               BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   if (state is SuccessLoginAuthState) {
-                    AppNavigator.pushRemove(context, HomePage());
+                    AppNavigator.pushRemove(context, HomePage(user: state.user,));
                   } else if (state is ErrorLoginAuthState) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

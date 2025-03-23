@@ -25,7 +25,11 @@ final class SuccessLoginAuthState extends AuthState {
 
 }
 
-final class SuccessSignupAuthState extends AuthState {}
+final class SuccessSignupAuthState extends AuthState {
+    final UserEntities user;
+
+  const SuccessSignupAuthState({required this.user});
+}
 
 // final class SuccessCredential
 

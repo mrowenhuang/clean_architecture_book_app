@@ -1,6 +1,8 @@
 class ApiNetwork {
+  // 1 : feature
   static final trendingBook = "https://openlibrary.org/trending/daily.json";
 
+  // 1 : subject
   static final literatureBook =
       "https://openlibrary.org/subjects/literature.json";
 
@@ -13,4 +15,7 @@ class ApiNetwork {
 
   static final programmingBook =
       "https://openlibrary.org/subjects/programming.json";
+
+  // 1 : quotes
+  static final quotes = "https://dummyjson.com/quotes/random";
 }

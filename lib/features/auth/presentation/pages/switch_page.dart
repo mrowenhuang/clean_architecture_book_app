@@ -15,7 +15,9 @@ class SwitchPage extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SuccessLoginAuthState) {
-          return AppNavigator.pushRemove(context, HomePage());
+          return AppNavigator.pushRemove(context, HomePage(
+            user: state.user,
+          ));
         } else if (state is FailedCredentialAuthState) {
           return AppNavigator.pushRemove(context, LoginPage());
         }

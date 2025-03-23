@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:book_app/core/failure/server_failure.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_add.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_credential.dart';
@@ -78,7 +77,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             event.username,
             response.user!.metadata.creationTime!.toIso8601String(),
           );
-          emit(SuccessSignupAuthState());
+          emit(
+            SuccessSignupAuthState(
+              user: UserEntities(
+                createdAt:
+                    response.user!.metadata.creationTime!.toIso8601String(),
+                email: event.email,
+                id: response.user!.uid,
+                username: event.username,
+              ),
+            ),
+          );
         } catch (e) {
           emit(ErrorSignupAuthState(message: e.toString()));
         }

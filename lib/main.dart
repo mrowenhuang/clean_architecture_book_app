@@ -1,6 +1,5 @@
 import 'package:book_app/core/config/app_theme.dart';
 import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:book_app/features/auth/presentation/pages/login_page.dart';
 import 'package:book_app/features/auth/presentation/pages/switch_page.dart';
 import 'package:book_app/firebase_options.dart';
 import 'package:book_app/injection.dart';
