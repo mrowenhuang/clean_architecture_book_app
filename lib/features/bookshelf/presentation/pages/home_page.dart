@@ -1,14 +1,26 @@
 import 'package:book_app/core/config/app_color.dart';
+import 'package:book_app/core/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
+import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.user});
 
   final UserEntities user;
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  @override
   Widget build(BuildContext context) {
+    TabController _tabcontroller = TabController(length: 3, vsync: this);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -43,44 +55,225 @@ class HomePage extends StatelessWidget {
               ),
               SizedBox(height: 5),
               Text(
-                "Hello ${user.username}",
+                "Hello ${widget.user.username}",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
+              SizedBox(height: 10),
               Align(
                 alignment: Alignment.topRight,
-                child: Text.rich(
-                  textAlign: TextAlign.end,
-                  TextSpan(
-                    text: '"Quotes of the day"\n',
-                    style: TextStyle(fontSize: 20, color: Colors.black54),
-                    children: [
-                      TextSpan(text: "author", style: TextStyle(fontSize: 16)),
-                    ],
-                  ),
+                child: BlocBuilder<BookshelfBloc, BookshelfState>(
+                  bloc: context.read<BookshelfBloc>()..add(GetQuotesEvent()),
+                  builder: (context, state) {
+                    if (state is LoadingGetQuotes) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 20,
+                            color: Colors.grey.shade200,
+                          ),
+                          SizedBox(height: 5),
+                          Container(
+                            width: 70,
+                            height: 20,
+                            color: Colors.grey.shade200,
+                          ),
+                        ],
+                      );
+                    } else if (state is SuccessGetQuotes) {
+                      return Text.rich(
+                        textAlign: TextAlign.end,
+                        TextSpan(
+                          text: '"${state.quotes.quote}"\n',
+                          style: TextStyle(fontSize: 18, color: Colors.black54),
+                          children: [
+                            TextSpan(
+                              text: "-- ${state.quotes.author} --",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return Text(
+                      "Something Wrong",
+                      style: TextStyle(fontSize: 14, color: Colors.black45),
+                    );
+                  },
                 ),
               ),
               SizedBox(height: 30),
-              Row(
-                children: [
-                  Row(
+              BlocBuilder<IndicatorCubit, IndicatorState>(
+                bloc: context.read<IndicatorCubit>(),
+                builder: (context, state) {
+                  state as ActiveIndicatorState;
+                  return Row(
                     children: [
-                      Container(
-                        width: 5,
-                        height: 15,
-                        decoration: BoxDecoration(
-                          color: AppColor.primary,
-                          borderRadius: BorderRadius.circular(10),
+                      Expanded(
+                        child: TabBar(
+                          controller: _tabcontroller,
+                          labelStyle: TextStyle(fontSize: 16),
+                          labelColor: AppColor.primary,
+                          unselectedLabelColor: Colors.black45,
+                          indicatorColor: Colors.transparent,
+                          labelPadding: EdgeInsets.zero,
+                          overlayColor: WidgetStateProperty.all(
+                            Colors.transparent,
+                          ),
+                          onTap: (value) {
+                            context
+                                .read<IndicatorCubit>()
+                                .setActiveIndicatorValue(value);
+                          },
+                          tabs: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 5,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        state.activeVal == 0
+                                            ? AppColor.primary
+                                            : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Text("Trending"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 5,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        state.activeVal == 1
+                                            ? AppColor.primary
+                                            : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Text("Romance"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 5,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        state.activeVal == 2
+                                            ? AppColor.primary
+                                            : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Text("Textbooks"),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(width: 5),
-                      Text("Trending", style: TextStyle(fontSize: 16)),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.primary,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 15,
+                            horizontal: 25,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: Text(
+                          "Bookmark",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ],
-                  ),
-                  Spacer(),
-                  Text("Classic", style: TextStyle(fontSize: 16)),
-                  Spacer(),
-                  Text("Textbooks", style: TextStyle(fontSize: 16)),
-                ],
+                  );
+                },
+              ),
+              SizedBox(height: 30),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabcontroller,
+                  children: [
+                    MasonryGridView.builder(
+                      gridDelegate:
+                          SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                      itemCount: 10,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                      physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(horizontal: 45),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(top: index == 1 ? 40 : 0),
+                          child: Container(
+                            height: 270,
+                            decoration: BoxDecoration(
+                              color: AppColor.secondary,
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: Offset(0, 4),
+                                  blurRadius: 4,
+                                  color: Colors.black54,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 220,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 5,
+                                    top: 5,
+                                  ),
+                                  child: Text(
+                                    "Book Title",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: Text(
+                                    "Author : Author Name",
+                                    style: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Container(),
+                    Container(),
+                  ],
+                ),
               ),
             ],
           ),

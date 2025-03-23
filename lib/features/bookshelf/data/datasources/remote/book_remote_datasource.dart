@@ -2,7 +2,7 @@ import 'package:book_app/core/constant/api_network.dart';
 import 'package:book_app/core/failure/server_failure.dart';
 import 'package:dio/dio.dart';
 
-abstract class RemoteDatasource {
+abstract class BookRemoteDatasource {
   Future<List> getTrendingBook();
   Future<List> getLiteratureBook();
   Future<List> getTextBook();
@@ -12,7 +12,7 @@ abstract class RemoteDatasource {
   Future<Map<String,dynamic>> getQuotes();
 }
 
-final class RemoteDatasourceImpl extends RemoteDatasource {
+final class BookRemoteDatasourceImpl extends BookRemoteDatasource {
   final Dio _dio = Dio();
   // 2 : feature area
   @override

@@ -1,5 +1,5 @@
 import 'package:book_app/core/failure/server_failure.dart';
-import 'package:book_app/features/bookshelf/data/datasources/remote/remote_datasource.dart';
+import 'package:book_app/features/bookshelf/data/datasources/remote/book_remote_datasource.dart';
 import 'package:book_app/features/bookshelf/data/models/feature_book_models.dart';
 import 'package:book_app/features/bookshelf/data/models/quotes_model.dart';
 import 'package:book_app/features/bookshelf/data/models/subject_book_model.dart';
@@ -10,15 +10,15 @@ import 'package:book_app/features/bookshelf/domain/repositories/book_repository.
 import 'package:dartz/dartz.dart';
 
 class BookRepositoryImpl extends BookRepository {
-  final RemoteDatasource _remoteDatasource;
+  final BookRemoteDatasource _bookRemoteDatasource;
 
-  BookRepositoryImpl(this._remoteDatasource);
+  BookRepositoryImpl(this._bookRemoteDatasource);
 
   @override
   Future<Either<ServerFailure, List<FeatureBookEntities>>>
   getTrendingBook() async {
     try {
-      final response = await _remoteDatasource.getTrendingBook();
+      final response = await _bookRemoteDatasource.getTrendingBook();
       final userData =
           response.map((e) => FeatureBookModels.fromMap(e)).toList();
       return right(userData);
@@ -31,7 +31,7 @@ class BookRepositoryImpl extends BookRepository {
   Future<Either<ServerFailure, List<SubjectBookEntities>>>
   getLiteratureBook() async {
     try {
-      final response = await _remoteDatasource.getLiteratureBook();
+      final response = await _bookRemoteDatasource.getLiteratureBook();
       final userData =
           response.map((e) => SubjectBookModel.fromMap(e)).toList();
       return right(userData);
@@ -44,7 +44,7 @@ class BookRepositoryImpl extends BookRepository {
   Future<Either<ServerFailure, List<SubjectBookEntities>>>
   getProgrammingBook() async {
     try {
-      final response = await _remoteDatasource.getProgrammingBook();
+      final response = await _bookRemoteDatasource.getProgrammingBook();
       final userData =
           response.map((e) => SubjectBookModel.fromMap(e)).toList();
       return right(userData);
@@ -57,7 +57,7 @@ class BookRepositoryImpl extends BookRepository {
   Future<Either<ServerFailure, List<SubjectBookEntities>>>
   getRomanceBook() async {
     try {
-      final response = await _remoteDatasource.getRomanceBook();
+      final response = await _bookRemoteDatasource.getRomanceBook();
       final userData =
           response.map((e) => SubjectBookModel.fromMap(e)).toList();
       return right(userData);
@@ -69,7 +69,7 @@ class BookRepositoryImpl extends BookRepository {
   @override
   Future<Either<ServerFailure, List<SubjectBookEntities>>> getTextBook() async {
     try {
-      final response = await _remoteDatasource.getTextBook();
+      final response = await _bookRemoteDatasource.getTextBook();
       final userData =
           response.map((e) => SubjectBookModel.fromMap(e)).toList();
       return right(userData);
@@ -82,7 +82,7 @@ class BookRepositoryImpl extends BookRepository {
   Future<Either<ServerFailure, List<SubjectBookEntities>>>
   getThrillersBook() async {
     try {
-      final response = await _remoteDatasource.getThrillersBook();
+      final response = await _bookRemoteDatasource.getThrillersBook();
       final userData =
           response.map((e) => SubjectBookModel.fromMap(e)).toList();
       return right(userData);
@@ -94,7 +94,7 @@ class BookRepositoryImpl extends BookRepository {
   @override
   Future<Either<ServerFailure, QuotesEntities>> getQuotes() async {
     try {
-      final response = await _remoteDatasource.getQuotes();
+      final response = await _bookRemoteDatasource.getQuotes();
       return right(QuotesModel.fromMap(response));
     } catch (e) {
       return left(ServerFailure(message: e.toString()));

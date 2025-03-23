@@ -100,7 +100,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     await for (var authEvent in _authCredential.call()) {
-      print(authEvent);
       if (authEvent != null) {
         final userData = await _authGet.call(authEvent.uid);
         await userData.fold(

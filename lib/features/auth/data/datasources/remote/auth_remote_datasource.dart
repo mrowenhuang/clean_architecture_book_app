@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class RemoteDatasource {
+abstract class AuthRemoteDatasource {
   Stream<User?> get getCredential;
   Future<Either<ServerFailure, UserCredential>> loginAuth(
     String email,
@@ -24,11 +24,11 @@ abstract class RemoteDatasource {
   Future<DocumentSnapshot> getAuthData(String id);
 }
 
-class RemoteDatasourceImpl extends RemoteDatasource {
+class AuthRemoteDatasourceImpl extends AuthRemoteDatasource {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
 
-  RemoteDatasourceImpl(this._firestore, this._firebaseAuth);
+  AuthRemoteDatasourceImpl(this._firestore, this._firebaseAuth);
 
   @override
   // TODO: implement getCredential

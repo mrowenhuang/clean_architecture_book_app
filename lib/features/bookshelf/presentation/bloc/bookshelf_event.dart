@@ -6,3 +6,6 @@ abstract class BookshelfEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+
+final class GetQuotesEvent extends BookshelfEvent {}

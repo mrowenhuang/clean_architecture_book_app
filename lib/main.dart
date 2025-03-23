@@ -1,6 +1,8 @@
 import 'package:book_app/core/config/app_theme.dart';
+import 'package:book_app/core/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:book_app/features/auth/presentation/pages/switch_page.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc.dart';
 import 'package:book_app/firebase_options.dart';
 import 'package:book_app/injection.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,8 +22,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<AuthBloc>()..add(CredentialAuthClickEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<AuthBloc>()..add(CredentialAuthClickEvent()),
+        ),
+        BlocProvider(
+          create: (context) => sl<IndicatorCubit>()
+        ),
+        BlocProvider(
+          create: (context) => sl<BookshelfBloc>()
+        ),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
