@@ -13,7 +13,8 @@ import 'package:book_app/features/bookshelf/data/repositories/book_repository_im
 import 'package:book_app/features/bookshelf/domain/repositories/book_repository.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/quotes_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/trending_book_get.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc/bookshelf_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/quotes_bloc/quotes_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
@@ -26,8 +27,9 @@ Future<void> initializeDependecies() async {
 
   // info : BLOC
   sl.registerFactory(() => AuthBloc(sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory(() => BookshelfBloc(sl(),sl()));
+  sl.registerFactory(() => BookshelfBloc(sl()));
   sl.registerFactory(() => IndicatorCubit());
+  sl.registerFactory(() => QuotesBloc(sl()));
 
   // info : USECASE
   sl.registerLazySingleton(() => AuthLogin(sl()));

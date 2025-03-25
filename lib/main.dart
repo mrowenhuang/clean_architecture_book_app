@@ -2,7 +2,8 @@ import 'package:book_app/core/config/app_theme.dart';
 import 'package:book_app/core/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:book_app/features/auth/presentation/pages/switch_page.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc/bookshelf_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/quotes_bloc/quotes_bloc.dart';
 import 'package:book_app/firebase_options.dart';
 import 'package:book_app/injection.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<BookshelfBloc>()
+        ),
+        BlocProvider(
+          create: (context) => sl<QuotesBloc>()
         ),
       ],
       child: MaterialApp(

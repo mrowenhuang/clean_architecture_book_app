@@ -7,7 +7,4 @@ abstract class BookshelfEvent extends Equatable {
   List<Object> get props => [];
 }
 
-
-final class GetQuotesEvent extends BookshelfEvent {}
-
 final class GetTrendingBookEvent extends BookshelfEvent {}

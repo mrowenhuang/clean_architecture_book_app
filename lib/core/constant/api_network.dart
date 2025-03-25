@@ -17,5 +17,5 @@ class ApiNetwork {
       "https://openlibrary.org/subjects/programming.json";
 
   // 1 : quotes
-  static final quotes = "https://zenquotes.io/api/random";
+  static final quotes = "https://quotes-api-self.vercel.app/quote";
 }

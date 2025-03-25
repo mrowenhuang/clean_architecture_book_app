@@ -14,6 +14,7 @@ abstract class BookRemoteDatasource {
 
 final class BookRemoteDatasourceImpl extends BookRemoteDatasource {
   final Dio _dio = Dio();
+
   // 2 : feature area
   @override
   Future<List> getTrendingBook() async {
@@ -85,8 +86,9 @@ final class BookRemoteDatasourceImpl extends BookRemoteDatasource {
   @override
   Future<Map<String, dynamic>> getQuotes() async {
     final response = await _dio.get(ApiNetwork.quotes);
+    
     if (response.statusCode == 200) {
-      return response.data[0] as Map<String, dynamic>;
+      return response.data as Map<String, dynamic>;
     } else {
       throw ServerFailure(message: "Something Wrong");
     }

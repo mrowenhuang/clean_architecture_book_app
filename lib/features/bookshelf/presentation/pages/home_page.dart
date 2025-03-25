@@ -1,9 +1,10 @@
 import 'package:book_app/core/config/app_color.dart';
 import 'package:book_app/core/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
-import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc/bookshelf_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/quotes_bloc/quotes_bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -139,8 +140,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               SizedBox(height: 10),
               Align(
                 alignment: Alignment.topRight,
-                child: BlocBuilder<BookshelfBloc, BookshelfState>(
-                  bloc: context.read<BookshelfBloc>()..add(GetQuotesEvent()),
+                child: BlocBuilder<QuotesBloc, QuotesState>(
+                  bloc: context.read<QuotesBloc>()..add(GetQuotesEvent()),
                   builder: (context, state) {
                     if (state is LoadingGetQuotesState) {
                       return Column(
@@ -338,16 +339,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           top: 5,
                                         ),
                                         child: Container(
-                                          width: 30,
-                                          height: 5,
+                                          width: 80,
+                                          height: 15,
                                           color: Colors.grey.shade200,
                                         ),
                                       ),
+                                      SizedBox(height: 5),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Container(
-                                          width: 30,
-                                          height: 5,
+                                          width: 140,
+                                          height: 10,
                                           color: Colors.grey.shade200,
                                         ),
                                       ),
@@ -363,12 +365,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                 ),
-                            itemCount: 10,
+                            itemCount: state.books.length,
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20,
                             physics: BouncingScrollPhysics(),
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             itemBuilder: (context, index) {
+                              final data = state.books[index];
                               return Padding(
                                 padding: EdgeInsets.only(
                                   top: index == 1 ? 40 : 0,
@@ -391,8 +394,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     children: [
                                       Container(
                                         height: 220,
+                                        padding: EdgeInsets.all(5),
                                         decoration: BoxDecoration(
                                           color: Colors.grey.shade200,
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "https://covers.openlibrary.org/b/id/${data.coverI}-L.jpg",
+                                          placeholder: (context, url) {
+                                            return Center(
+                                              child: CupertinoActivityIndicator(
+                                                color: AppColor.primary,
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                       Padding(
@@ -401,14 +417,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           top: 5,
                                         ),
                                         child: Text(
-                                          "Book Title",
+                                          data.title.toString(),
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(fontSize: 16),
                                         ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Text(
-                                          "Author : Author Name",
+                                          "Author : ${data.author?[0] ?? "--"}",
                                           style: TextStyle(
                                             color: Colors.black45,
                                             fontSize: 12,
