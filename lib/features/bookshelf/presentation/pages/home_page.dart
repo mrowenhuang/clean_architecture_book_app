@@ -1,7 +1,11 @@
+import 'package:book_app/common/navigator/app_navigator.dart';
 import 'package:book_app/core/config/app_color.dart';
 import 'package:book_app/core/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc/bookshelf_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/romance_bloc/romance_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/textbook_bloc/textbook_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/trending_bloc/trending_bloc.dart';
+import 'package:book_app/features/search_bookshelf/presentation/pages/search_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:book_app/features/bookshelf/presentation/bloc/quotes_bloc/quotes_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -118,7 +122,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          AppNavigator.push(context, SearchPage());
+                        },
                         child: Icon(Icons.search, size: 28),
                       ),
                       SizedBox(width: 15),
@@ -206,59 +212,82 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 .read<IndicatorCubit>()
                                 .setActiveIndicatorValue(value);
                           },
-                          tabs: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 5,
-                                  height: 15,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        state.activeVal == 0
-                                            ? AppColor.primary
-                                            : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                SizedBox(width: 5),
-                                Text("Trending"),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 5,
-                                  height: 15,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        state.activeVal == 1
-                                            ? AppColor.primary
-                                            : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                SizedBox(width: 5),
-                                Text("Romance"),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 5,
-                                  height: 15,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        state.activeVal == 2
-                                            ? AppColor.primary
-                                            : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                SizedBox(width: 5),
-                                Text("Textbooks"),
-                              ],
-                            ),
-                          ],
+                          tabs:
+                              state.feature.asMap().entries.map((entry) {
+                                int key = entry.key;
+                                var data = entry.value;
+                                return Row(
+                                  children: [
+                                    Container(
+                                      width: 5,
+                                      height: 15,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            state.activeVal == key
+                                                ? AppColor.primary
+                                                : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(data['name'].toString()),
+                                  ],
+                                );
+                              }).toList(),
+
+                          // tabs: [
+                          //   Row(
+                          //     children: [
+                          //       Container(
+                          //         width: 5,
+                          //         height: 15,
+                          //         decoration: BoxDecoration(
+                          //           color:
+                          //               state.activeVal == 0
+                          //                   ? AppColor.primary
+                          //                   : Colors.transparent,
+                          //           borderRadius: BorderRadius.circular(10),
+                          //         ),
+                          //       ),
+                          //       SizedBox(width: 5),
+                          //       Text("Trending"),
+                          //     ],
+                          //   ),
+                          //   Row(
+                          //     children: [
+                          //       Container(
+                          //         width: 5,
+                          //         height: 15,
+                          //         decoration: BoxDecoration(
+                          //           color:
+                          //               state.activeVal == 1
+                          //                   ? AppColor.primary
+                          //                   : Colors.transparent,
+                          //           borderRadius: BorderRadius.circular(10),
+                          //         ),
+                          //       ),
+                          //       SizedBox(width: 5),
+                          //       Text("Romance"),
+                          //     ],
+                          //   ),
+                          //   Row(
+                          //     children: [
+                          //       Container(
+                          //         width: 5,
+                          //         height: 15,
+                          //         decoration: BoxDecoration(
+                          //           color:
+                          //               state.activeVal == 2
+                          //                   ? AppColor.primary
+                          //                   : Colors.transparent,
+                          //           borderRadius: BorderRadius.circular(10),
+                          //         ),
+                          //       ),
+                          //       SizedBox(width: 5),
+                          //       Text("Textbooks"),
+                          //     ],
+                          //   ),
+                          // ],
                         ),
                       ),
                       ElevatedButton(
@@ -290,76 +319,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 child: TabBarView(
                   controller: tabcontroller,
                   children: [
-                    BlocBuilder<BookshelfBloc, BookshelfState>(
+                    BlocBuilder<TrendingBloc, TrendingState>(
                       bloc:
-                          context.read<BookshelfBloc>()
+                          context.read<TrendingBloc>()
                             ..add(GetTrendingBookEvent()),
                       builder: (context, state) {
                         if (state is LoadingGetTrendingBookState) {
-                          return MasonryGridView.builder(
-                            gridDelegate:
-                                SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                ),
-                            itemCount: 10,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  top: index == 1 ? 40 : 0,
-                                ),
-                                child: Container(
-                                  height: 270,
-                                  decoration: BoxDecoration(
-                                    color: AppColor.secondary,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        offset: Offset(0, 4),
-                                        blurRadius: 4,
-                                        color: Colors.black54,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 220,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 5,
-                                          top: 5,
-                                        ),
-                                        child: Container(
-                                          width: 80,
-                                          height: 15,
-                                          color: Colors.grey.shade200,
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 5),
-                                        child: Container(
-                                          width: 140,
-                                          height: 10,
-                                          color: Colors.grey.shade200,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                          return Center(
+                            child: CupertinoActivityIndicator(
+                              color: AppColor.primary,
+                            ),
                           );
-                        } else if (state is SuccessGetTrendingBook) {
+                        } else if (state is SuccessGetTrendingBookState) {
                           return MasonryGridView.builder(
                             gridDelegate:
                                 SliverSimpleGridDelegateWithFixedCrossAxisCount(
@@ -426,6 +397,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Text(
                                           "Author : ${data.author?[0] ?? "--"}",
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: Colors.black45,
                                             fontSize: 12,
@@ -445,8 +417,201 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         );
                       },
                     ),
-                    Container(),
-                    Container(),
+                    BlocBuilder<RomanceBloc, RomanceState>(
+                      bloc:
+                          context.read<RomanceBloc>()
+                            ..add(GetRomanceBookEvent()),
+                      builder: (context, state) {
+                        if (state is LoadingGetRomanceBookState) {
+                          return Center(
+                            child: CupertinoActivityIndicator(
+                              color: AppColor.primary,
+                            ),
+                          );
+                        } else if (state is SuccessGetRomanceBookState) {
+                          return MasonryGridView.builder(
+                            gridDelegate:
+                                SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                ),
+                            itemCount: state.books.length,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                            physics: BouncingScrollPhysics(),
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            itemBuilder: (context, index) {
+                              final data = state.books[index];
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  top: index == 1 ? 40 : 0,
+                                ),
+                                child: Container(
+                                  height: 270,
+                                  decoration: BoxDecoration(
+                                    color: AppColor.secondary,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: Offset(0, 4),
+                                        blurRadius: 4,
+                                        color: Colors.black54,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 220,
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade200,
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "https://covers.openlibrary.org/b/id/${data.coverI}-L.jpg",
+                                          placeholder: (context, url) {
+                                            return Center(
+                                              child: CupertinoActivityIndicator(
+                                                color: AppColor.primary,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 5,
+                                          top: 5,
+                                        ),
+                                        child: Text(
+                                          data.title.toString(),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 5),
+                                        child: Text(
+                                          "Author : ${data.author?[0] ?? "--"}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        return Text(
+                          "Something Wrong",
+                          style: TextStyle(fontSize: 14, color: Colors.black45),
+                        );
+                      },
+                    ),
+                    BlocBuilder<TextbookBloc, TextbookState>(
+                      bloc:
+                          context.read<TextbookBloc>()..add(GetTextbookEvent()),
+                      builder: (context, state) {
+                        if (state is LoadingGetTextbookState) {
+                          return Center(
+                            child: CupertinoActivityIndicator(
+                              color: AppColor.primary,
+                            ),
+                          );
+                        } else if (state is SuccessGetTextbookState) {
+                          return MasonryGridView.builder(
+                            gridDelegate:
+                                SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                ),
+                            itemCount: state.books.length,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                            physics: BouncingScrollPhysics(),
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            itemBuilder: (context, index) {
+                              final data = state.books[index];
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  top: index == 1 ? 40 : 0,
+                                ),
+                                child: Container(
+                                  height: 270,
+                                  decoration: BoxDecoration(
+                                    color: AppColor.secondary,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: Offset(0, 4),
+                                        blurRadius: 4,
+                                        color: Colors.black54,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 220,
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade200,
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "https://covers.openlibrary.org/b/id/${data.coverI}-L.jpg",
+                                          placeholder: (context, url) {
+                                            return Center(
+                                              child: CupertinoActivityIndicator(
+                                                color: AppColor.primary,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 5,
+                                          top: 5,
+                                        ),
+                                        child: Text(
+                                          data.title.toString(),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 5),
+                                        child: Text(
+                                          "Author : ${data.author?[0] ?? "--"}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.black45,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        return Text(
+                          "Something Wrong",
+                          style: TextStyle(fontSize: 14, color: Colors.black45),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

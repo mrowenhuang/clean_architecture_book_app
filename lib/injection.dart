@@ -12,9 +12,14 @@ import 'package:book_app/features/bookshelf/data/datasources/remote/book_remote_
 import 'package:book_app/features/bookshelf/data/repositories/book_repository_impl.dart';
 import 'package:book_app/features/bookshelf/domain/repositories/book_repository.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/quotes_get.dart';
+import 'package:book_app/features/bookshelf/domain/usecases/romance_book_get.dart';
+import 'package:book_app/features/bookshelf/domain/usecases/text_book_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/trending_book_get.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/bookshelf_bloc/bookshelf_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/feature_cubit/feature_cubit.dart';
 import 'package:book_app/features/bookshelf/presentation/bloc/quotes_bloc/quotes_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/romance_bloc/romance_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/textbook_bloc/textbook_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bloc/trending_bloc/trending_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
@@ -27,9 +32,12 @@ Future<void> initializeDependecies() async {
 
   // info : BLOC
   sl.registerFactory(() => AuthBloc(sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory(() => BookshelfBloc(sl()));
   sl.registerFactory(() => IndicatorCubit());
   sl.registerFactory(() => QuotesBloc(sl()));
+  sl.registerFactory(() => TrendingBloc(sl()));
+  sl.registerFactory(() => RomanceBloc(sl()));
+  sl.registerFactory(() => TextbookBloc(sl()));
+  sl.registerFactory(() => FeatureCubit());
 
   // info : USECASE
   sl.registerLazySingleton(() => AuthLogin(sl()));
@@ -39,6 +47,8 @@ Future<void> initializeDependecies() async {
   sl.registerLazySingleton(() => AuthAdd(sl()));
   sl.registerLazySingleton(() => TrendingBookGet(sl()));
   sl.registerLazySingleton(() => QuotesGet(sl()));
+  sl.registerLazySingleton(() => RomanceBookGet(sl()));
+  sl.registerLazySingleton(() => TextBookGet(sl()));
 
   // info : REPOSITORIES
   sl.registerLazySingleton<AuthRepository>(() => RepositoryImpl(sl()));

@@ -1,21 +1,30 @@
 class ApiNetwork {
-  // 1 : feature
+  // ~ bookshelf
   static final trendingBook = "https://openlibrary.org/trending/daily.json";
 
-  // 1 : subject
   static final literatureBook =
       "https://openlibrary.org/subjects/literature.json";
 
-  static final textBook = "https://openlibrary.org/subjects/textbooks.json";
+  static final textBook =
+      "https://openlibrary.org/search.json?q=subject:textbooks";
+
+  static final motivation =
+      "https://openlibrary.org/search.json?q=subject:motivation";
 
   static final thrillersBook =
       "https://openlibrary.org/subjects/thrillers.json";
 
-  static final romanceBook = "https://openlibrary.org/subjects/romance.json";
+  static final romanceBook =
+      "https://openlibrary.org/search.json?q=subject:romance";
 
   static final programmingBook =
       "https://openlibrary.org/subjects/programming.json";
 
-  // 1 : quotes
   static final quotes = "https://quotes-api-self.vercel.app/quote";
+
+  // ~ search bookshelf
+
+  static String searchBook(String value) {
+    return "https://www.googleapis.com/books/v1/volumes?q=$value";
+  }
 }

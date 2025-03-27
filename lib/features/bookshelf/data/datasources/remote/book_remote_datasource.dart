@@ -55,7 +55,7 @@ final class BookRemoteDatasourceImpl extends BookRemoteDatasource {
     final response = await _dio.get(ApiNetwork.romanceBook);
 
     if (response.statusCode == 200) {
-      return response.data['works'];
+      return response.data['docs'];
     } else {
       throw ServerFailure(message: "Something Wrong");
     }
@@ -66,7 +66,7 @@ final class BookRemoteDatasourceImpl extends BookRemoteDatasource {
     final response = await _dio.get(ApiNetwork.textBook);
 
     if (response.statusCode == 200) {
-      return response.data['works'];
+      return response.data['docs'];
     } else {
       throw ServerFailure(message: "Something Wrong");
     }

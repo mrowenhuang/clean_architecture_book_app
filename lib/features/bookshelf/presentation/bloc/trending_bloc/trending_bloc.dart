@@ -6,22 +6,18 @@ import 'package:book_app/features/bookshelf/domain/usecases/trending_book_get.da
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'bookshelf_event.dart';
-part 'bookshelf_state.dart';
+part 'trending_event.dart';
+part 'trending_state.dart';
 
-class BookshelfBloc extends Bloc<BookshelfEvent, BookshelfState> {
+class TrendingBloc extends Bloc<TrendingEvent, TrendingState> {
   final TrendingBookGet _trendingBookGet;
 
-  BookshelfBloc(this._trendingBookGet)
-    : super(BookshelfInitial()) {
+  TrendingBloc(this._trendingBookGet) : super(TrendingInitial()) {
     on<GetTrendingBookEvent>(getTrendingBookEvent);
   }
-
-
-
   FutureOr<void> getTrendingBookEvent(
     GetTrendingBookEvent event,
-    Emitter<BookshelfState> emit,
+    Emitter<TrendingState> emit,
   ) async {
     emit(LoadingGetTrendingBookState());
 
@@ -32,7 +28,7 @@ class BookshelfBloc extends Bloc<BookshelfEvent, BookshelfState> {
         emit(ErrorGetTrendingBookState(failure));
       },
       (response) {
-        emit(SuccessGetTrendingBook(response));
+        emit(SuccessGetTrendingBookState(response));
       },
     );
   }

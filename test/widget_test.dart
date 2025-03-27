@@ -25,5 +25,5 @@ void main() async {
     print(r);
   },);
 
-  // await RemoteDatasourceImpl(FirebaseFirestore.instance).addAuthData("owen@gmail.com", "12312", "owen");
+  
 }
