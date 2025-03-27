@@ -7,3 +7,18 @@ abstract class SearchBookshelfState extends Equatable {
   List<Object> get props => [];
 }
 class SearchBookshelfInitial extends SearchBookshelfState {}
+
+class LoadingGetSearchBookshelfState extends SearchBookshelfState {}
+class SuccessGetSearchBookshelfState extends SearchBookshelfState {
+  final List<SearchBookEntities> books;
+
+  const SuccessGetSearchBookshelfState({required this.books});
+
+}
+class ErrorGetSearchBookshelfState extends SearchBookshelfState {
+  final String failure;
+
+  const ErrorGetSearchBookshelfState({required this.failure});
+
+}
+

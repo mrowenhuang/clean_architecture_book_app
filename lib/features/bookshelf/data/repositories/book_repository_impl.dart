@@ -7,7 +7,7 @@ import 'package:book_app/features/bookshelf/domain/entities/quotes_entities.dart
 import 'package:book_app/features/bookshelf/domain/repositories/book_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class BookRepositoryImpl extends BookRepository {
+class BookRepositoryImpl implements BookRepository {
   final BookRemoteDatasource _bookRemoteDatasource;
 
   BookRepositoryImpl(this._bookRemoteDatasource);

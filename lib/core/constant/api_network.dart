@@ -25,6 +25,6 @@ class ApiNetwork {
   // ~ search bookshelf
 
   static String searchBook(String value) {
-    return "https://www.googleapis.com/books/v1/volumes?q=$value";
+    return "https://www.googleapis.com/books/v1/volumes?q=$value&startIndex=0&maxResults=20";
   }
 }

@@ -24,7 +24,7 @@ abstract class AuthRemoteDatasource {
   Future<DocumentSnapshot> getAuthData(String id);
 }
 
-class AuthRemoteDatasourceImpl extends AuthRemoteDatasource {
+class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
 

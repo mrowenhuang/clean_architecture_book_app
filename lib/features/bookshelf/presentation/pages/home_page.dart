@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               SizedBox(height: 45),
               Divider(color: AppColor.primary, thickness: 2),
               Text("Active Feature", style: TextStyle(fontSize: 16)),
-              Spacer(flex: 3),
+              Spacer(flex: 10),
               Divider(color: AppColor.primary, thickness: 2),
               ElevatedButton(
                 onPressed: () {},

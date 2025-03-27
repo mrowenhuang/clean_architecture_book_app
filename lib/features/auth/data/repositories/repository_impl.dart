@@ -6,7 +6,7 @@ import 'package:book_app/features/auth/domain/repositories/auth_repository.dart'
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class RepositoryImpl extends AuthRepository {
+class RepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource _authRemoteDatasource;
 
   RepositoryImpl(this._authRemoteDatasource);

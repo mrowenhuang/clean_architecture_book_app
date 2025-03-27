@@ -7,6 +7,7 @@ import 'package:book_app/features/bookshelf/presentation/bloc/quotes_bloc/quotes
 import 'package:book_app/features/bookshelf/presentation/bloc/romance_bloc/romance_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/bloc/textbook_bloc/textbook_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/bloc/trending_bloc/trending_bloc.dart';
+import 'package:book_app/features/search_bookshelf/presentation/bloc/search_bookshelf_bloc.dart';
 import 'package:book_app/features/search_bookshelf/presentation/pages/search_page.dart';
 import 'package:book_app/firebase_options.dart';
 import 'package:book_app/injection.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<RomanceBloc>()),
         BlocProvider(create: (context) => sl<TextbookBloc>()),
         BlocProvider(create: (context) => sl<FeatureCubit>()),
+        BlocProvider(create: (context) => sl<SearchBookshelfBloc>()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

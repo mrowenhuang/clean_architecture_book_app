@@ -12,7 +12,7 @@ abstract class BookRemoteDatasource {
   Future<Map<String, dynamic>> getQuotes();
 }
 
-final class BookRemoteDatasourceImpl extends BookRemoteDatasource {
+final class BookRemoteDatasourceImpl implements BookRemoteDatasource {
   final Dio _dio = Dio();
 
   // 2 : feature area

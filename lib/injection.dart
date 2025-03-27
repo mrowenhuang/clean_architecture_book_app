@@ -20,6 +20,11 @@ import 'package:book_app/features/bookshelf/presentation/bloc/quotes_bloc/quotes
 import 'package:book_app/features/bookshelf/presentation/bloc/romance_bloc/romance_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/bloc/textbook_bloc/textbook_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/bloc/trending_bloc/trending_bloc.dart';
+import 'package:book_app/features/search_bookshelf/data/datasources/remote/search_book_datasource.dart';
+import 'package:book_app/features/search_bookshelf/data/repositories/search_book_repository_impl.dart';
+import 'package:book_app/features/search_bookshelf/domain/repositories/search_book_repository.dart';
+import 'package:book_app/features/search_bookshelf/domain/usecases/search_book_get.dart';
+import 'package:book_app/features/search_bookshelf/presentation/bloc/search_bookshelf_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
@@ -38,6 +43,7 @@ Future<void> initializeDependecies() async {
   sl.registerFactory(() => RomanceBloc(sl()));
   sl.registerFactory(() => TextbookBloc(sl()));
   sl.registerFactory(() => FeatureCubit());
+  sl.registerFactory(() => SearchBookshelfBloc(sl()));
 
   // info : USECASE
   sl.registerLazySingleton(() => AuthLogin(sl()));
@@ -49,10 +55,12 @@ Future<void> initializeDependecies() async {
   sl.registerLazySingleton(() => QuotesGet(sl()));
   sl.registerLazySingleton(() => RomanceBookGet(sl()));
   sl.registerLazySingleton(() => TextBookGet(sl()));
+  sl.registerLazySingleton(() => SearchBookGet(sl()));
 
   // info : REPOSITORIES
   sl.registerLazySingleton<AuthRepository>(() => RepositoryImpl(sl()));
   sl.registerLazySingleton<BookRepository>(() => BookRepositoryImpl(sl()));
+  sl.registerLazySingleton<SearchBookRepository>(() => SearchBookRepositoryImpl(sl()));
 
   // info : DATASOURCE
   sl.registerLazySingleton<AuthRemoteDatasource>(
@@ -60,5 +68,8 @@ Future<void> initializeDependecies() async {
   );
   sl.registerLazySingleton<BookRemoteDatasource>(
     () => BookRemoteDatasourceImpl(),
+  );
+  sl.registerLazySingleton<SearchBookDatasource>(
+    () => SearchBookDatasourceImpl(),
   );
 }
