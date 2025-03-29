@@ -1,4 +1,3 @@
-import 'package:book_app/core/failure/server_failure.dart';
 import 'package:hive/hive.dart';
 
 abstract class BookLocalDatasource {
@@ -16,7 +15,7 @@ class BookLocalDatasourceImpl implements BookLocalDatasource {
       final response = await _box.get('bookmark');
       return response as List;
     } else {
-      throw ServerFailure(message: "Something wrong");
+      throw Exception("No data");
     }
   }
 }

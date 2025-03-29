@@ -148,6 +148,7 @@ class BookRepositoryImpl implements BookRepository {
             fav: data.fav,
             key: data.key,
             title: data.title,
+            coverI: data.coverI,
           ),
         );
 
@@ -170,7 +171,7 @@ class BookRepositoryImpl implements BookRepository {
           }).toList();
 
       bookmarkData = bookData;
-      return right(bookData);
+      return right(bookmarkData);
     } catch (e) {
       return left(ServerFailure(message: e.toString()));
     }

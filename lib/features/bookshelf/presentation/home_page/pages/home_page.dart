@@ -1,22 +1,18 @@
 import 'package:book_app/common/favorite/cubit/fav_cubit.dart';
 import 'package:book_app/common/navigator/app_navigator.dart';
+import 'package:book_app/common/time/time.dart';
 import 'package:book_app/common/widget/mansory_view.dart';
 import 'package:book_app/core/config/app_color.dart';
 import 'package:book_app/common/indicator/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
-import 'package:book_app/features/bookshelf/domain/entities/bookmark_entities.dart';
-import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/romance_bloc/romance_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/textbook_bloc/textbook_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/trending_bloc/trending_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/pages/bookmark_page.dart';
 import 'package:book_app/features/bookshelf/presentation/search_page/pages/search_page.dart';
-import 'package:book_app/injection.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_bloc/quotes_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -121,7 +117,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         child: Icon(Icons.menu, size: 28),
                       ),
                       SizedBox(width: 15),
-                      Text("Good Morning", style: TextStyle(fontSize: 16)),
+                      Text(Time().timeStatus(), style: TextStyle(fontSize: 16)),
                     ],
                   ),
                   Spacer(),
