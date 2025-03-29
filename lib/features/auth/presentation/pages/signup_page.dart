@@ -4,7 +4,7 @@ import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:book_app/features/auth/presentation/pages/login_page.dart';
 import 'package:book_app/features/auth/presentation/widgets/title_password_text_field.dart';
 import 'package:book_app/features/auth/presentation/widgets/title_text_field.dart';
-import 'package:book_app/features/bookshelf/presentation/pages/home_page.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

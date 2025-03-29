@@ -1,4 +1,5 @@
-import 'package:book_app/core/cubit/indicator_cubit.dart';
+import 'package:book_app/common/favorite/cubit/fav_cubit.dart';
+import 'package:book_app/common/indicator/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/data/datasources/remote/auth_remote_datasource.dart';
 import 'package:book_app/features/auth/data/repositories/repository_impl.dart';
 import 'package:book_app/features/auth/domain/repositories/auth_repository.dart';
@@ -8,30 +9,38 @@ import 'package:book_app/features/auth/domain/usecases/auth_login.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_signup.dart';
 import 'package:book_app/features/auth/domain/usecases/auth_credential.dart';
 import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:book_app/features/bookshelf/data/datasources/local/book_local_datasource.dart';
 import 'package:book_app/features/bookshelf/data/datasources/remote/book_remote_datasource.dart';
+import 'package:book_app/features/bookshelf/data/models/bookmark_models.dart';
 import 'package:book_app/features/bookshelf/data/repositories/book_repository_impl.dart';
 import 'package:book_app/features/bookshelf/domain/repositories/book_repository.dart';
+import 'package:book_app/features/bookshelf/domain/usecases/bookmark_add_and_remove.dart';
+import 'package:book_app/features/bookshelf/domain/usecases/bookmark_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/quotes_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/romance_book_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/text_book_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/trending_book_get.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/feature_cubit/feature_cubit.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/quotes_bloc/quotes_bloc.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/romance_bloc/romance_bloc.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/textbook_bloc/textbook_bloc.dart';
-import 'package:book_app/features/bookshelf/presentation/bloc/trending_bloc/trending_bloc.dart';
-import 'package:book_app/features/search_bookshelf/data/datasources/remote/search_book_datasource.dart';
-import 'package:book_app/features/search_bookshelf/data/repositories/search_book_repository_impl.dart';
-import 'package:book_app/features/search_bookshelf/domain/repositories/search_book_repository.dart';
-import 'package:book_app/features/search_bookshelf/domain/usecases/search_book_get.dart';
-import 'package:book_app/features/search_bookshelf/presentation/bloc/search_bookshelf_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/feature_cubit/feature_cubit.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_bloc/quotes_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/romance_bloc/romance_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/textbook_bloc/textbook_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/trending_bloc/trending_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/search_page/bloc/search_bloc.dart';
+
+import 'package:book_app/features/bookshelf/domain/usecases/search_book_get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive/hive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initializeDependecies() async {
+  Hive.registerAdapter(BookmarkModelsAdapter());
+  var box = await Hive.openBox("bookmark");
+
+  sl.registerLazySingleton(() => box);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => FirebaseAuth.instance);
 
@@ -43,7 +52,9 @@ Future<void> initializeDependecies() async {
   sl.registerFactory(() => RomanceBloc(sl()));
   sl.registerFactory(() => TextbookBloc(sl()));
   sl.registerFactory(() => FeatureCubit());
-  sl.registerFactory(() => SearchBookshelfBloc(sl()));
+  sl.registerFactory(() => FavCubit(sl()));
+  sl.registerFactory(() => SearchBloc(sl()));
+  sl.registerFactory(() => BookmarkBloc(sl()));
 
   // info : USECASE
   sl.registerLazySingleton(() => AuthLogin(sl()));
@@ -56,11 +67,14 @@ Future<void> initializeDependecies() async {
   sl.registerLazySingleton(() => RomanceBookGet(sl()));
   sl.registerLazySingleton(() => TextBookGet(sl()));
   sl.registerLazySingleton(() => SearchBookGet(sl()));
+  sl.registerLazySingleton(() => BookmarkAddAndRemove(sl()));
+  sl.registerLazySingleton(() => BookmarkGet(sl()));
 
   // info : REPOSITORIES
   sl.registerLazySingleton<AuthRepository>(() => RepositoryImpl(sl()));
-  sl.registerLazySingleton<BookRepository>(() => BookRepositoryImpl(sl()));
-  sl.registerLazySingleton<SearchBookRepository>(() => SearchBookRepositoryImpl(sl()));
+  sl.registerLazySingleton<BookRepository>(
+    () => BookRepositoryImpl(sl(), sl(), sl()),
+  );
 
   // info : DATASOURCE
   sl.registerLazySingleton<AuthRemoteDatasource>(
@@ -69,7 +83,7 @@ Future<void> initializeDependecies() async {
   sl.registerLazySingleton<BookRemoteDatasource>(
     () => BookRemoteDatasourceImpl(),
   );
-  sl.registerLazySingleton<SearchBookDatasource>(
-    () => SearchBookDatasourceImpl(),
+  sl.registerLazySingleton<BookLocalDatasource>(
+    () => BookLocalDatasourceImpl(sl()),
   );
 }

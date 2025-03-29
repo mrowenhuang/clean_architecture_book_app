@@ -10,6 +10,7 @@ abstract class BookRemoteDatasource {
   Future<List> getRomanceBook();
   Future<List> getProgrammingBook();
   Future<Map<String, dynamic>> getQuotes();
+  Future<List> searchBook(String value);
 }
 
 final class BookRemoteDatasourceImpl implements BookRemoteDatasource {
@@ -86,9 +87,20 @@ final class BookRemoteDatasourceImpl implements BookRemoteDatasource {
   @override
   Future<Map<String, dynamic>> getQuotes() async {
     final response = await _dio.get(ApiNetwork.quotes);
-    
+
     if (response.statusCode == 200) {
       return response.data as Map<String, dynamic>;
+    } else {
+      throw ServerFailure(message: "Something Wrong");
+    }
+  }
+
+  @override
+  Future<List> searchBook(String value) async {
+    final response = await _dio.get(ApiNetwork.searchBook(value));
+
+    if (response.statusCode == 200) {
+      return response.data['items'];
     } else {
       throw ServerFailure(message: "Something Wrong");
     }

@@ -6,11 +6,16 @@ class FeatureBookEntities extends Equatable {
   int? coverI;
   List<String>? author;
   String? key;
+  bool? fav;
 
-  FeatureBookEntities({this.title, this.coverI, this.author, this.key});
+  FeatureBookEntities({
+    this.title,
+    this.coverI,
+    this.author,
+    this.key,
+    this.fav,
+  });
 
   @override
-  List<Object?> get props => [title, coverI, author, key];
-
-  
+  List<Object?> get props => [title, coverI, author, key, fav];
 }
