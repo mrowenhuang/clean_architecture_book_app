@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
 abstract class BookLocalDatasource {
@@ -15,7 +16,7 @@ class BookLocalDatasourceImpl implements BookLocalDatasource {
       final response = await _box.get('bookmark');
       return response as List;
     } else {
-      throw Exception("No data");
+      throw ("No Bookmark");
     }
   }
 }

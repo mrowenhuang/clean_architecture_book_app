@@ -5,6 +5,7 @@ import 'package:book_app/common/widget/mansory_view.dart';
 import 'package:book_app/core/config/app_color.dart';
 import 'package:book_app/common/indicator/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
+import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/romance_bloc/romance_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/textbook_bloc/textbook_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/trending_bloc/trending_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_b
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.user});
@@ -236,60 +238,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   ],
                                 );
                               }).toList(),
-
-                          // tabs: [
-                          //   Row(
-                          //     children: [
-                          //       Container(
-                          //         width: 5,
-                          //         height: 15,
-                          //         decoration: BoxDecoration(
-                          //           color:
-                          //               state.activeVal == 0
-                          //                   ? AppColor.primary
-                          //                   : Colors.transparent,
-                          //           borderRadius: BorderRadius.circular(10),
-                          //         ),
-                          //       ),
-                          //       SizedBox(width: 5),
-                          //       Text("Trending"),
-                          //     ],
-                          //   ),
-                          //   Row(
-                          //     children: [
-                          //       Container(
-                          //         width: 5,
-                          //         height: 15,
-                          //         decoration: BoxDecoration(
-                          //           color:
-                          //               state.activeVal == 1
-                          //                   ? AppColor.primary
-                          //                   : Colors.transparent,
-                          //           borderRadius: BorderRadius.circular(10),
-                          //         ),
-                          //       ),
-                          //       SizedBox(width: 5),
-                          //       Text("Romance"),
-                          //     ],
-                          //   ),
-                          //   Row(
-                          //     children: [
-                          //       Container(
-                          //         width: 5,
-                          //         height: 15,
-                          //         decoration: BoxDecoration(
-                          //           color:
-                          //               state.activeVal == 2
-                          //                   ? AppColor.primary
-                          //                   : Colors.transparent,
-                          //           borderRadius: BorderRadius.circular(10),
-                          //         ),
-                          //       ),
-                          //       SizedBox(width: 5),
-                          //       Text("Textbooks"),
-                          //     ],
-                          //   ),
-                          // ],
                         ),
                       ),
                       ElevatedButton(
@@ -323,65 +271,48 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 child: TabBarView(
                   controller: tabcontroller,
                   children: [
-                    BlocBuilder<TrendingBloc, TrendingState>(
-                      bloc:
-                          context.read<TrendingBloc>()
-                            ..add(GetTrendingBookEvent()),
-                      builder: (context, state) {
-                        if (state is LoadingGetTrendingBookState) {
-                          return Center(
-                            child: CupertinoActivityIndicator(
-                              color: AppColor.primary,
-                            ),
-                          );
-                        } else if (state is SuccessGetTrendingBookState) {
-                          return mansoryView(state, context);
-                        }
-                        return Text(
-                          "Something Wrong",
-                          style: TextStyle(fontSize: 14, color: Colors.black45),
-                        );
-                      },
-                    ),
-                    BlocBuilder<RomanceBloc, RomanceState>(
-                      bloc:
-                          context.read<RomanceBloc>()
-                            ..add(GetRomanceBookEvent()),
-                      builder: (context, state) {
-                        if (state is LoadingGetRomanceBookState) {
-                          return Center(
-                            child: CupertinoActivityIndicator(
-                              color: AppColor.primary,
-                            ),
-                          );
-                        } else if (state is SuccessGetRomanceBookState) {
-                          return mansoryView(state, context);
-                        }
-                        return Text(
-                          "Something Wrong",
-                          style: TextStyle(fontSize: 14, color: Colors.black45),
-                        );
-                      },
-                    ),
-                    BlocBuilder<TextbookBloc, TextbookState>(
-                      bloc:
-                          context.read<TextbookBloc>()..add(GetTextbookEvent()),
-                      builder: (context, state) {
-                        if (state is LoadingGetTextbookState) {
-                          return Center(
-                            child: CupertinoActivityIndicator(
-                              color: AppColor.primary,
-                            ),
-                          );
-                        } else if (state is SuccessGetTextbookState) {
-                          return mansoryView(state, context);
-                        }
-                        return Text(
-                          "Something Wrong",
-                          style: TextStyle(fontSize: 14, color: Colors.black45),
-                        );
-                      },
-                    ),
+                    _trendingBook(),
+                    // BlocBuilder<RomanceBloc, RomanceState>(
+                    //   bloc:
+                    //       context.read<RomanceBloc>()
+                    //         ..add(GetRomanceBookEvent()),
+                    //   builder: (context, state) {
+                    //     if (state is LoadingGetRomanceBookState) {
+                    //       return Center(
+                    //         child: CupertinoActivityIndicator(
+                    //           color: AppColor.primary,
+                    //         ),
+                    //       );
+                    //     } else if (state is SuccessGetRomanceBookState) {
+                    //       return mansoryView(state, context);
+                    //     }
+                    //     return Text(
+                    //       "Something Wrong",
+                    //       style: TextStyle(fontSize: 14, color: Colors.black45),
+                    //     );
+                    //   },
+                    // ),
+                    // BlocBuilder<TextbookBloc, TextbookState>(
+                    //   bloc:
+                    //       context.read<TextbookBloc>()..add(GetTextbookEvent()),
+                    //   builder: (context, state) {
+                    //     if (state is LoadingGetTextbookState) {
+                    //       return Center(
+                    //         child: CupertinoActivityIndicator(
+                    //           color: AppColor.primary,
+                    //         ),
+                    //       );
+                    //     } else if (state is SuccessGetTextbookState) {
+                    //       return mansoryView(state, context);
+                    //     }
+                    //     return Text(
+                    //       "Something Wrong",
+                    //       style: TextStyle(fontSize: 14, color: Colors.black45),
+                    //     );
+                    //   },
+                    // ),
+                    Container(),
+                    Container()
                   ],
                 ),
               ),
@@ -389,6 +320,75 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _trendingBook() {
+    return BlocBuilder<BookmarkBloc, BookmarkState>(
+      bloc: context.read<BookmarkBloc>(),
+      builder: (context, bookmarkState) {
+        return BlocBuilder<TrendingBloc, TrendingState>(
+          bloc: context.read<TrendingBloc>()..add(GetTrendingBookEvent()),
+          builder: (context, state) {
+            if (state is LoadingGetTrendingBookState) {
+              return Center(
+                child: CupertinoActivityIndicator(color: AppColor.primary),
+              );
+            } else if (state is SuccessGetTrendingBookState) {
+              return BlocBuilder<FavCubit, FavState>(
+                builder: (context, favstate) {
+                  return MasonryGridView.builder(
+                    gridDelegate:
+                        SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                    itemCount: state.books.length,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    physics: BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    itemBuilder: (context, index) {
+                      var data = state.books[index];
+                      if (bookmarkState is SuccessGetBookmarkState) {
+                        if (bookmarkState.books.isEmpty) {
+                          data.fav = false;
+                        } else {
+                          data.fav = bookmarkState.books.any(
+                            (element) => element.key == data.key ? true : false,
+                          );
+                        }
+                      }
+                      return mansoryView(index, data, context);
+                    },
+                  );
+                },
+              );
+            }
+            return Text(
+              "Something Wrong",
+              style: TextStyle(fontSize: 14, color: Colors.black45),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _romanceBook() {
+    return BlocBuilder<RomanceBloc, RomanceState>(
+      bloc: context.read<RomanceBloc>()..add(GetRomanceBookEvent()),
+      builder: (context, state) {
+        if (state is LoadingGetRomanceBookState) {
+          return Center(
+            child: CupertinoActivityIndicator(color: AppColor.primary),
+          );
+        } else if (state is SuccessGetRomanceBookState) {
+        }
+        return Text(
+          "Something Wrong",
+          style: TextStyle(fontSize: 14, color: Colors.black45),
+        );
+      },
     );
   }
 }
