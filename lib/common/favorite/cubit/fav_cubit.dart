@@ -12,9 +12,6 @@ class FavCubit extends Cubit<FavState> {
 
   Future<void> addAndRemoveFavEvent(BookmarkEntities data) async {
     emit(LoadingAddFavState());
-
-    print(data.fav);
-
     final response = await _bookmarkAddAndRemove.call(data);
     response.fold(
       (failure) {

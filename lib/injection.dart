@@ -1,4 +1,5 @@
 import 'package:book_app/common/favorite/cubit/fav_cubit.dart';
+import 'package:book_app/common/feature/cubit/feature_cubit.dart';
 import 'package:book_app/common/indicator/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/data/datasources/remote/auth_remote_datasource.dart';
 import 'package:book_app/features/auth/data/repositories/repository_impl.dart';
@@ -21,7 +22,6 @@ import 'package:book_app/features/bookshelf/domain/usecases/romance_book_get.dar
 import 'package:book_app/features/bookshelf/domain/usecases/text_book_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/trending_book_get.dart';
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
-import 'package:book_app/features/bookshelf/presentation/home_page/bloc/feature_cubit/feature_cubit.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_bloc/quotes_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/romance_bloc/romance_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/textbook_bloc/textbook_bloc.dart';
@@ -51,10 +51,10 @@ Future<void> initializeDependecies() async {
   sl.registerFactory(() => TrendingBloc(sl()));
   sl.registerFactory(() => RomanceBloc(sl()));
   sl.registerFactory(() => TextbookBloc(sl()));
-  sl.registerFactory(() => FeatureCubit());
   sl.registerFactory(() => FavCubit(sl()));
   sl.registerFactory(() => SearchBloc(sl()));
   sl.registerFactory(() => BookmarkBloc(sl()));
+  sl.registerFactory(() => FeatureCubit());
 
   // info : USECASE
   sl.registerLazySingleton(() => AuthLogin(sl()));

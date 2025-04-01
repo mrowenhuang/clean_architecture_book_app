@@ -8,9 +8,5 @@ sealed class FeatureState extends Equatable {
 }
 
 final class FeatureInitial extends FeatureState {
-  final List<Map<String, String>> data = [
-    {"feature": "Trending"},
-    {"feature": "Romance"},
-    {"feature": "Textbook"},
-  ];
+  
 }

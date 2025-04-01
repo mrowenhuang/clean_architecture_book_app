@@ -73,7 +73,6 @@ class BookmarkPage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         itemBuilder: (context, index) {
                           var data = state.books[index];
-
                           // ! masalah di sini
                           return Padding(
                             padding: EdgeInsets.only(top: index == 1 ? 40 : 0),
@@ -160,22 +159,12 @@ class BookmarkPage extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                       onTap: () {
-                                        data.fav = false;
                                         context
                                             .read<FavCubit>()
-                                            .addAndRemoveFavEvent(
-                                              BookmarkEntities(
-                                                authors: data.authors,
-                                                title: data.title,
-                                                fav: false,
-                                                key: data.key,
-                                                coverI: data.coverI,
-                                              ),
-                                            );
-                                        // context.read<BookmarkBloc>().add(
-                                        //   GetBookmarkEvent(),
-                                        // );
-                                        print(data.fav);
+                                            .addAndRemoveFavEvent(data);
+                                        context.read<BookmarkBloc>().add(
+                                          GetBookmarkEvent(),
+                                        );
                                       },
                                       child: AnimatedSwitcher(
                                         duration: Duration(milliseconds: 500),
