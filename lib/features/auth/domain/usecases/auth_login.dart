@@ -1,5 +1,4 @@
 import 'package:book_app/core/failure/server_failure.dart';
-import 'package:book_app/features/auth/domain/entities/user_entities.dart';
 import 'package:book_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';

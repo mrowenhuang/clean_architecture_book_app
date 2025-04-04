@@ -17,14 +17,22 @@ import 'package:book_app/features/bookshelf/data/repositories/book_repository_im
 import 'package:book_app/features/bookshelf/domain/repositories/book_repository.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/bookmark_add_and_remove.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/bookmark_get.dart';
+import 'package:book_app/features/bookshelf/domain/usecases/detail_book_get.dart';
+import 'package:book_app/features/bookshelf/domain/usecases/literature_book_get.dart';
+import 'package:book_app/features/bookshelf/domain/usecases/programming_book_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/quotes_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/romance_book_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/text_book_get.dart';
+import 'package:book_app/features/bookshelf/domain/usecases/thrillers_book_get.dart';
 import 'package:book_app/features/bookshelf/domain/usecases/trending_book_get.dart';
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/detail_page/bloc/detail_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/literature_bloc/literature_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/programming_bloc/programming_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_bloc/quotes_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/romance_bloc/romance_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/textbook_bloc/textbook_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/thrillers_bloc/thrillers_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/trending_bloc/trending_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/search_page/bloc/search_bloc.dart';
 
@@ -55,6 +63,10 @@ Future<void> initializeDependecies() async {
   sl.registerFactory(() => SearchBloc(sl()));
   sl.registerFactory(() => BookmarkBloc(sl()));
   sl.registerFactory(() => FeatureCubit());
+  sl.registerFactory(() => DetailBloc(sl()));
+  sl.registerFactory(() => ThrillersBloc(sl()));
+  sl.registerFactory(() => ProgrammingBloc(sl()));
+  sl.registerFactory(() => LiteratureBloc(sl()));
 
   // info : USECASE
   sl.registerLazySingleton(() => AuthLogin(sl()));
@@ -69,6 +81,10 @@ Future<void> initializeDependecies() async {
   sl.registerLazySingleton(() => SearchBookGet(sl()));
   sl.registerLazySingleton(() => BookmarkAddAndRemove(sl()));
   sl.registerLazySingleton(() => BookmarkGet(sl()));
+  sl.registerLazySingleton(() => DetailBookGet(sl()));
+  sl.registerLazySingleton(() => LiteratureBookGet(sl()));
+  sl.registerLazySingleton(() => ProgrammingBookGet(sl()));
+  sl.registerLazySingleton(() => ThrillersBookGet(sl()));
 
   // info : REPOSITORIES
   sl.registerLazySingleton<AuthRepository>(() => RepositoryImpl(sl()));

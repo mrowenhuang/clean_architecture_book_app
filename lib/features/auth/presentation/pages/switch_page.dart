@@ -1,4 +1,5 @@
 import 'package:book_app/common/navigator/app_navigator.dart';
+import 'package:book_app/core/config/app_color.dart';
 import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:book_app/features/auth/presentation/pages/login_page.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/pages/home_page.dart';
@@ -15,16 +16,17 @@ class SwitchPage extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SuccessLoginAuthState) {
-          return AppNavigator.pushRemove(context, HomePage(
-            user: state.user,
-          ));
+          return AppNavigator.pushRemove(context, HomePage(user: state.user));
         } else if (state is FailedCredentialAuthState) {
           return AppNavigator.pushRemove(context, LoginPage());
         }
       },
       bloc: context.read<AuthBloc>(),
       builder: (context, state) {
-        return Scaffold(body: Center(child: CupertinoActivityIndicator()));
+        return Scaffold(
+          backgroundColor: AppColor.secondary,
+          body: Center(child: CupertinoActivityIndicator()),
+        );
       },
     );
   }

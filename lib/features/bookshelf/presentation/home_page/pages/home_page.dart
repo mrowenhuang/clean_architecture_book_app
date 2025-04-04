@@ -1,22 +1,15 @@
-import 'package:book_app/common/favorite/cubit/fav_cubit.dart';
 import 'package:book_app/common/feature/cubit/feature_cubit.dart';
 import 'package:book_app/common/navigator/app_navigator.dart';
 import 'package:book_app/common/time/time.dart';
-import 'package:book_app/common/widget/mansory_view.dart';
 import 'package:book_app/core/config/app_color.dart';
 import 'package:book_app/common/indicator/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
-import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
-import 'package:book_app/features/bookshelf/presentation/home_page/bloc/romance_bloc/romance_bloc.dart';
-import 'package:book_app/features/bookshelf/presentation/home_page/bloc/textbook_bloc/textbook_bloc.dart';
-import 'package:book_app/features/bookshelf/presentation/home_page/bloc/trending_bloc/trending_bloc.dart';
+
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/pages/bookmark_page.dart';
 import 'package:book_app/features/bookshelf/presentation/search_page/pages/search_page.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_bloc/quotes_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.user});
@@ -30,12 +23,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    TabController tabcontroller = TabController(length: 3, vsync: this);
+    TabController tabcontroller = TabController(
+      length: context.read<FeatureCubit>().activeFeature.length,
+      vsync: this,
+    );
     final GlobalKey<ScaffoldState> key = GlobalKey();
 
     return Scaffold(
+      backgroundColor: AppColor.secondary,
       key: key,
       drawer: Drawer(
+        backgroundColor: AppColor.secondary,
         child: Padding(
           padding: EdgeInsets.only(top: 50, right: 20, left: 20),
           child: Column(
@@ -82,27 +80,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 bloc: context.read<FeatureCubit>(),
                 builder: (context, state) {
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: List.generate(
                           context.read<FeatureCubit>().activeFeature.length,
                           (index) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            return Column(
                               children: [
                                 Text(
                                   context
                                       .read<FeatureCubit>()
-                                      .activeFeature[index],
+                                      .activeFeature[index]['name'],
                                 ),
-                                IconButton(
-                                  onPressed: () {},
-
-                                  icon: Icon(
-                                    Icons.minimize,
-                                    color: Colors.black45,
-                                  ),
-                                ),
+                                SizedBox(height: 15),
                               ],
                             );
                           },
@@ -112,22 +104,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         children: List.generate(
                           context.read<FeatureCubit>().deactiveFeature.length,
                           (index) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            return Column(
                               children: [
-                                Text(
-                                  context
-                                      .read<FeatureCubit>()
-                                      .deactiveFeature[index],
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      context
+                                          .read<FeatureCubit>()
+                                          .deactiveFeature[index]['name'],
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        context.read<FeatureCubit>().addFeature(
+                                          context
+                                              .read<FeatureCubit>()
+                                              .deactiveFeature[index],
+                                        );
+                                      },
+                                      child: Icon(Icons.add),
+                                    ),
+                                  ],
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    context.read<FeatureCubit>().addFeature(
-                                      "Classic",
-                                    );
-                                  },
-                                  icon: Icon(Icons.add),
-                                ),
+                                SizedBox(height: 15),
                               ],
                             );
                           },
@@ -255,49 +255,60 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               SizedBox(height: 20),
               BlocBuilder<IndicatorCubit, IndicatorState>(
                 bloc: context.read<IndicatorCubit>(),
-                builder: (context, state) {
-                  state as ActiveIndicatorState;
+                builder: (context, indicatorState) {
+                  indicatorState as ActiveIndicatorState;
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        child: TabBar(
-                          controller: tabcontroller,
-                          labelStyle: TextStyle(fontSize: 16),
-                          labelColor: AppColor.primary,
-                          unselectedLabelColor: Colors.black45,
-                          indicatorColor: Colors.transparent,
-                          labelPadding: EdgeInsets.zero,
-                          overlayColor: WidgetStateProperty.all(
-                            Colors.transparent,
-                          ),
-                          onTap: (value) {
-                            context
-                                .read<IndicatorCubit>()
-                                .setActiveIndicatorValue(value);
+                        child: BlocBuilder<FeatureCubit, FeatureState>(
+                          bloc: context.read<FeatureCubit>(),
+                          builder: (context, state) {
+                            return TabBar(
+                              controller: tabcontroller,
+                              labelStyle: TextStyle(fontSize: 16),
+                              labelColor: AppColor.primary,
+                              unselectedLabelColor: Colors.black45,
+                              indicatorColor: Colors.transparent,
+                              labelPadding: EdgeInsets.zero,
+                              overlayColor: WidgetStateProperty.all(
+                                Colors.transparent,
+                              ),
+                              onTap: (value) {
+                                context
+                                    .read<IndicatorCubit>()
+                                    .setActiveIndicatorValue(value);
+                              },
+                              tabs:
+                                  context
+                                      .read<FeatureCubit>()
+                                      .activeFeature
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (e) => Row(
+                                          children: [
+                                            Container(
+                                              width: 5,
+                                              height: 15,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    indicatorState.activeVal ==
+                                                            e.key
+                                                        ? AppColor.primary
+                                                        : Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(e.value['name']),
+                                          ],
+                                        ),
+                                      )
+                                      .toList(),
+                            );
                           },
-                          tabs:
-                              state.feature.asMap().entries.map((entry) {
-                                int key = entry.key;
-                                var data = entry.value;
-                                return Row(
-                                  children: [
-                                    Container(
-                                      width: 5,
-                                      height: 15,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            state.activeVal == key
-                                                ? AppColor.primary
-                                                : Colors.transparent,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(data['name'].toString()),
-                                  ],
-                                );
-                              }).toList(),
                         ),
                       ),
                       ElevatedButton(
@@ -306,10 +317,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColor.primary,
-                          // padding: EdgeInsets.symmetric(
-                          //   vertical: 10,
-                          //   horizontal: 15,
-                          // ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -328,166 +335,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               SizedBox(height: 20),
               Expanded(
-                child: TabBarView(
-                  controller: tabcontroller,
-                  children: [_trendingBook(), _romanceBook(), _textBook()],
+                child: BlocBuilder<FeatureCubit, FeatureState>(
+                  builder: (context, state) {
+                    return TabBarView(
+                      controller: tabcontroller,
+                      children:
+                          context.read<FeatureCubit>().activeFeature.map((e) {
+                            return e['results'] as Widget;
+                          }).toList(),
+                    );
+                  },
                 ),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _trendingBook() {
-    return BlocBuilder<BookmarkBloc, BookmarkState>(
-      bloc: context.read<BookmarkBloc>(),
-      builder: (context, bookmarkState) {
-        return BlocBuilder<TrendingBloc, TrendingState>(
-          bloc: context.read<TrendingBloc>()..add(GetTrendingBookEvent()),
-          builder: (context, state) {
-            if (state is LoadingGetTrendingBookState) {
-              return Center(
-                child: CupertinoActivityIndicator(color: AppColor.primary),
-              );
-            } else if (state is SuccessGetTrendingBookState) {
-              return BlocBuilder<FavCubit, FavState>(
-                builder: (context, favstate) {
-                  return MasonryGridView.builder(
-                    gridDelegate:
-                        SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                    itemCount: state.books.length,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    itemBuilder: (context, index) {
-                      var data = state.books[index];
-                      if (bookmarkState is SuccessGetBookmarkState) {
-                        if (bookmarkState.books.isEmpty) {
-                          data.fav = false;
-                        } else {
-                          data.fav = bookmarkState.books.any(
-                            (element) => element.key == data.key ? true : false,
-                          );
-                        }
-                      }
-                      return mansoryView(index, data, context);
-                    },
-                  );
-                },
-              );
-            }
-            return Text(
-              "Something Wrong",
-              style: TextStyle(fontSize: 14, color: Colors.black45),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _romanceBook() {
-    return BlocBuilder<BookmarkBloc, BookmarkState>(
-      builder: (context, bookmarkState) {
-        return BlocBuilder<RomanceBloc, RomanceState>(
-          bloc: context.read<RomanceBloc>()..add(GetRomanceBookEvent()),
-          builder: (context, state) {
-            if (state is LoadingGetRomanceBookState) {
-              return Center(
-                child: CupertinoActivityIndicator(color: AppColor.primary),
-              );
-            } else if (state is SuccessGetRomanceBookState) {
-              return BlocBuilder<FavCubit, FavState>(
-                builder: (context, favstate) {
-                  return MasonryGridView.builder(
-                    gridDelegate:
-                        SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                    itemCount: state.books.length,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    itemBuilder: (context, index) {
-                      var data = state.books[index];
-                      if (bookmarkState is SuccessGetBookmarkState) {
-                        if (bookmarkState.books.isEmpty) {
-                          data.fav = false;
-                        } else {
-                          data.fav = bookmarkState.books.any(
-                            (element) => element.key == data.key ? true : false,
-                          );
-                        }
-                      }
-                      return mansoryView(index, data, context);
-                    },
-                  );
-                },
-              );
-            }
-            return Text(
-              "Something Wrong",
-              style: TextStyle(fontSize: 14, color: Colors.black45),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _textBook() {
-    return BlocBuilder<BookmarkBloc, BookmarkState>(
-      builder: (context, bookmarkState) {
-        return BlocBuilder<TextbookBloc, TextbookState>(
-          bloc: context.read<TextbookBloc>()..add(GetTextbookEvent()),
-          builder: (context, state) {
-            if (state is LoadingGetTextbookState) {
-              return Center(
-                child: CupertinoActivityIndicator(color: AppColor.primary),
-              );
-            } else if (state is SuccessGetTextbookState) {
-              return BlocBuilder<FavCubit, FavState>(
-                builder: (context, favstate) {
-                  return MasonryGridView.builder(
-                    gridDelegate:
-                        SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                    itemCount: state.books.length,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    itemBuilder: (context, index) {
-                      var data = state.books[index];
-                      if (bookmarkState is SuccessGetBookmarkState) {
-                        if (bookmarkState.books.isEmpty) {
-                          data.fav = false;
-                        } else {
-                          data.fav = bookmarkState.books.any(
-                            (element) => element.key == data.key ? true : false,
-                          );
-                        }
-                      }
-                      return mansoryView(index, data, context);
-                    },
-                  );
-                },
-              );
-            }
-            return Text(
-              "Something Wrong",
-              style: TextStyle(fontSize: 14, color: Colors.black45),
-            );
-          },
-        );
-      },
     );
   }
 }

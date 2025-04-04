@@ -11,6 +11,7 @@ abstract class BookRemoteDatasource {
   Future<List> getProgrammingBook();
   Future<Map<String, dynamic>> getQuotes();
   Future<List> searchBook(String value);
+  Future<Map<String, dynamic>> getDetail(String value);
 }
 
 final class BookRemoteDatasourceImpl implements BookRemoteDatasource {
@@ -34,7 +35,7 @@ final class BookRemoteDatasourceImpl implements BookRemoteDatasource {
     final response = await _dio.get(ApiNetwork.literatureBook);
 
     if (response.statusCode == 200) {
-      return response.data['works'];
+      return response.data['docs'];
     } else {
       throw ServerFailure(message: "Something Wrong");
     }
@@ -45,7 +46,7 @@ final class BookRemoteDatasourceImpl implements BookRemoteDatasource {
     final response = await _dio.get(ApiNetwork.programmingBook);
 
     if (response.statusCode == 200) {
-      return response.data['works'];
+      return response.data['docs'];
     } else {
       throw ServerFailure(message: "Something Wrong");
     }
@@ -78,7 +79,7 @@ final class BookRemoteDatasourceImpl implements BookRemoteDatasource {
     final response = await _dio.get(ApiNetwork.thrillersBook);
 
     if (response.statusCode == 200) {
-      return response.data['works'];
+      return response.data['docs'];
     } else {
       throw ServerFailure(message: "Something Wrong");
     }
@@ -103,6 +104,17 @@ final class BookRemoteDatasourceImpl implements BookRemoteDatasource {
       return response.data['items'];
     } else {
       throw ServerFailure(message: "Something Wrong");
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getDetail(String value) async {
+    final response = await _dio.get(ApiNetwork.detailBook(value));
+
+    if (response.statusCode == 200) {
+      return response.data['description'];
+    } else {
+      throw ServerFailure(message: "Something wrong");
     }
   }
 }

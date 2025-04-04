@@ -10,3 +10,7 @@ sealed class FeatureState extends Equatable {
 final class FeatureInitial extends FeatureState {
   
 }
+
+final class SuccessAddandRemoveFeatureState extends FeatureState {}
+
+final class LoadingAddandRemoveFeatureState extends FeatureState {}

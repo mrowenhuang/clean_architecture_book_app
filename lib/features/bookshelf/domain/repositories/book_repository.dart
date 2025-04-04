@@ -16,6 +16,9 @@ abstract class BookRepository {
   Future<Either<ServerFailure, List<SearchBookEntities>>> getSearchBook(
     String value,
   );
-  Future<Either<ServerFailure, String>> addAndRemoveToBookmark(BookmarkEntities data);
+  Future<Either<ServerFailure, String>> addAndRemoveToBookmark(
+    BookmarkEntities data,
+  );
   Future<Either<ServerFailure, List<BookmarkEntities>>> getBookmark();
+  Future<Either<ServerFailure, String>> getDetailBook(String value);
 }

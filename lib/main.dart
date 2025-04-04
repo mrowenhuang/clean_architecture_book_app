@@ -5,12 +5,15 @@ import 'package:book_app/common/indicator/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:book_app/features/auth/presentation/pages/switch_page.dart';
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/detail_page/bloc/detail_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/literature_bloc/literature_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/programming_bloc/programming_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_bloc/quotes_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/romance_bloc/romance_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/textbook_bloc/textbook_bloc.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/bloc/thrillers_bloc/thrillers_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/trending_bloc/trending_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/search_page/bloc/search_bloc.dart';
-import 'package:book_app/features/bookshelf/presentation/search_page/pages/search_page.dart';
 import 'package:book_app/firebase_options.dart';
 import 'package:book_app/injection.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,7 +48,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<SearchBloc>()),
         BlocProvider(create: (context) => sl<FavCubit>()),
         BlocProvider(create: (context) => sl<FeatureCubit>()),
-        BlocProvider(create: (context) => sl<BookmarkBloc>()..add(GetBookmarkEvent())),
+        BlocProvider(create: (context) => sl<DetailBloc>()),
+        BlocProvider(create: (context) => sl<LiteratureBloc>()),
+        BlocProvider(create: (context) => sl<ThrillersBloc>()),
+        BlocProvider(create: (context) => sl<ProgrammingBloc>()),
+        BlocProvider(
+          create: (context) => sl<BookmarkBloc>()..add(GetBookmarkEvent()),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

@@ -5,25 +5,29 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:book_app/features/bookshelf/data/datasources/local/book_local_datasource.dart';
 import 'package:book_app/features/bookshelf/data/datasources/remote/book_remote_datasource.dart';
 import 'package:book_app/features/bookshelf/data/repositories/book_repository_impl.dart';
-import 'package:book_app/features/bookshelf/domain/repositories/book_repository.dart';
-import 'package:book_app/firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
+import 'package:book_app/injection.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
 
   // await RemoteDatasourceImpl().getTrendingBook();
-  final resp = await BookRepositoryImpl(BookRemoteDatasourceImpl()).getQuotes();
+  final resp = await BookRepositoryImpl(
+    BookRemoteDatasourceImpl(),
+    sl(),
+    BookLocalDatasourceImpl(sl()),
+  ).getDetailBook('/works/OL25291486W');
 
-  resp.fold((l) {
-    print(l.message);
-  }, (r) {
-    print(r);
-  },);
+  print(resp);
 
-  
+  // resp.fold(
+  //   (l) {
+  //     print(l.message);
+  //   },
+  //   (r) {
+  //     print(r);
+  //   },
+  // );
 }

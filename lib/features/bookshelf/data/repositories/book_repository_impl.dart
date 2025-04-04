@@ -176,4 +176,17 @@ class BookRepositoryImpl implements BookRepository {
       return left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<ServerFailure, String>> getDetailBook(String value) async {
+    try {
+      final response = await _bookRemoteDatasource.getDetail(value);
+
+      final detailData = response['value'];
+
+      return right(detailData);
+    } catch (e) {
+      return left(ServerFailure(message: e.toString()));
+    }
+  }
 }
