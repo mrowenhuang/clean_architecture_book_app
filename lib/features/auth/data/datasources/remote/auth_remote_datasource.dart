@@ -14,7 +14,6 @@ abstract class AuthRemoteDatasource {
     String password,
     String username,
   );
-  Future<void> signoutAuth();
   Future<void> addAuthData(
     String id,
     String email,
@@ -72,10 +71,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     }
   }
 
-  @override
-  Future<void> signoutAuth() async {
-    await _firebaseAuth.signOut();
-  }
 
   @override
   Future<void> addAuthData(

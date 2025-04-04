@@ -14,7 +14,6 @@ abstract class AuthRepository {
     String password,
     String username,
   );
-  Future<void> signoutAuth();
   Future<Either<ServerFailure, UserEntities>> getAuth(String id);
   Future<ServerFailure> addAuth(
     String id,
