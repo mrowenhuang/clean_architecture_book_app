@@ -52,10 +52,6 @@ class RepositoryImpl implements AuthRepository {
     }
   }
 
-  @override
-  Future<void> signoutAuth() async {
-    await _authRemoteDatasource.signoutAuth();
-  }
 
   @override
   Future<Either<ServerFailure, UserEntities>> getAuth(String id) async {

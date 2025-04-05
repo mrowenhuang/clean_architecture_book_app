@@ -99,7 +99,7 @@ Future<void> initializeDependecies() async {
     () => BookRepositoryImpl(sl(), sl(), sl()),
   );
   sl.registerLazySingleton<CommonRepositories>(
-    () => CommonRepositoriesImpl(box2, sl()),
+    () => CommonRepositoriesImpl(sl(), sl()),
   );
 
   // info : DATASOURCE
@@ -113,6 +113,6 @@ Future<void> initializeDependecies() async {
     () => BookLocalDatasourceImpl(sl()),
   );
   sl.registerLazySingleton<CommonLocalDatasources>(
-    () => CommonLocalDatasourcesImpl(box2),
+    () => CommonLocalDatasourcesImpl(sl()),
   );
 }

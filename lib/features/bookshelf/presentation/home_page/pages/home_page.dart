@@ -4,10 +4,13 @@ import 'package:book_app/common/time/time.dart';
 import 'package:book_app/core/config/app_color.dart';
 import 'package:book_app/common/indicator/cubit/indicator_cubit.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
+import 'package:book_app/features/auth/presentation/pages/switch_page.dart';
 
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/pages/bookmark_page.dart';
+import 'package:book_app/features/bookshelf/presentation/profile_page/pages/profile_page.dart';
 import 'package:book_app/features/bookshelf/presentation/search_page/pages/search_page.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_bloc/quotes_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
@@ -38,14 +41,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           padding: EdgeInsets.only(top: 50, right: 20, left: 20),
           child: Column(
             children: [
-              Material(
-                elevation: 5,
-                borderRadius: BorderRadius.circular(100),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    "https://ui-avatars.com/api/?name=${widget.user.username}&size=512",
+              Hero(
+                tag: 'profile-image',
+                child: Material(
+                  elevation: 5,
+                  borderRadius: BorderRadius.circular(100),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage(
+                      "https://ui-avatars.com/api/?name=${widget.user.username}&size=512",
+                    ),
+                    maxRadius: 60,
                   ),
-                  maxRadius: 60,
                 ),
               ),
               SizedBox(height: 10),
@@ -60,7 +67,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  AppNavigator.push(context, ProfilePage(user: widget.user));
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.primary,
 
@@ -140,7 +149,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               Spacer(flex: 10),
               Divider(color: AppColor.primary, thickness: 2),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                  AppNavigator.pushRemove(context, SwitchPage());
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.secondary,
 
@@ -192,10 +204,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         child: Icon(Icons.search, size: 28),
                       ),
                       SizedBox(width: 15),
-                      CircleAvatar(
-                        maxRadius: 25,
-                        backgroundImage: NetworkImage(
-                          "https://ui-avatars.com/api/?name=${widget.user.username}&size=512",
+                      GestureDetector(
+                        onTap: () {
+                          AppNavigator.push(
+                            context,
+                            ProfilePage(user: widget.user),
+                          );
+                        },
+                        child: CircleAvatar(
+                          maxRadius: 25,
+                          backgroundImage: NetworkImage(
+                            "https://ui-avatars.com/api/?name=${widget.user.username}&size=512",
+                          ),
                         ),
                       ),
                     ],
@@ -302,7 +322,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               ),
                                             ),
                                             SizedBox(width: 5),
-                                            Text(e.value['name']),
+                                            Expanded(
+                                              child: Text(
+                                                e.value['name'],
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       )
