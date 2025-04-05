@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<TextbookBloc>()),
         BlocProvider(create: (context) => sl<SearchBloc>()),
         BlocProvider(create: (context) => sl<FavCubit>()),
-        BlocProvider(create: (context) => sl<FeatureCubit>()),
+        BlocProvider(create: (context) => sl<FeatureCubit>()..loadFeature()),
         BlocProvider(create: (context) => sl<DetailBloc>()),
         BlocProvider(create: (context) => sl<LiteratureBloc>()),
         BlocProvider(create: (context) => sl<ThrillersBloc>()),

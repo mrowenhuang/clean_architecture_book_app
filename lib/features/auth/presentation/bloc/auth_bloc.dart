@@ -12,6 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
+// info : pada case ini mengapa semua usecase bisa gi gunakan dalam 1 bloc karena logic nya saling terhubung dan memilki 1 kesamaan dan 1 kali logika seperti contoh pada saat login berhasil dia memanggil data usernya dari database dan juga bila 1 logika berhasil maka emit nya sudah di jalankan semua berbeda dengan homepage yang menggunakan banyak bloc karena mereka memilki data yang tidak saling terkait dan mesti di tampilkan secara bersama sama dalam 1 halaman
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthLogin _authLogin;
   final AuthSignup _authSignup;

@@ -1,3 +1,8 @@
+import 'package:book_app/common/data/datasources/local/common_local_datasources.dart';
+import 'package:book_app/common/data/repositories/common_repositories_impl.dart';
+import 'package:book_app/common/domain/repositories/common_repositories.dart';
+import 'package:book_app/common/domain/usecase/feature_get.dart';
+import 'package:book_app/common/domain/usecase/feature_save.dart';
 import 'package:book_app/common/favorite/cubit/fav_cubit.dart';
 import 'package:book_app/common/feature/cubit/feature_cubit.dart';
 import 'package:book_app/common/indicator/cubit/indicator_cubit.dart';
@@ -62,7 +67,7 @@ Future<void> initializeDependecies() async {
   sl.registerFactory(() => FavCubit(sl()));
   sl.registerFactory(() => SearchBloc(sl()));
   sl.registerFactory(() => BookmarkBloc(sl()));
-  sl.registerFactory(() => FeatureCubit());
+  sl.registerFactory(() => FeatureCubit(sl(), sl()));
   sl.registerFactory(() => DetailBloc(sl()));
   sl.registerFactory(() => ThrillersBloc(sl()));
   sl.registerFactory(() => ProgrammingBloc(sl()));
@@ -85,11 +90,16 @@ Future<void> initializeDependecies() async {
   sl.registerLazySingleton(() => LiteratureBookGet(sl()));
   sl.registerLazySingleton(() => ProgrammingBookGet(sl()));
   sl.registerLazySingleton(() => ThrillersBookGet(sl()));
+  sl.registerLazySingleton(() => FeatureSave(sl()));
+  sl.registerLazySingleton(() => FeatureGet(sl()));
 
   // info : REPOSITORIES
   sl.registerLazySingleton<AuthRepository>(() => RepositoryImpl(sl()));
   sl.registerLazySingleton<BookRepository>(
     () => BookRepositoryImpl(sl(), sl(), sl()),
+  );
+  sl.registerLazySingleton<CommonRepositories>(
+    () => CommonRepositoriesImpl(box2, sl()),
   );
 
   // info : DATASOURCE
@@ -101,5 +111,8 @@ Future<void> initializeDependecies() async {
   );
   sl.registerLazySingleton<BookLocalDatasource>(
     () => BookLocalDatasourceImpl(sl()),
+  );
+  sl.registerLazySingleton<CommonLocalDatasources>(
+    () => CommonLocalDatasourcesImpl(box2),
   );
 }
