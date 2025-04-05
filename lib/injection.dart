@@ -67,7 +67,8 @@ Future<void> initializeDependecies() async {
   sl.registerFactory(() => FavCubit(sl()));
   sl.registerFactory(() => SearchBloc(sl()));
   sl.registerFactory(() => BookmarkBloc(sl()));
-  sl.registerFactory(() => FeatureCubit(sl(), sl()));
+  sl.registerFactory(() => FeatureCubit(sl(),sl()));
+  // sl.registerFactory(() => FeatureBloc(sl(),sl()));
   sl.registerFactory(() => DetailBloc(sl()));
   sl.registerFactory(() => ThrillersBloc(sl()));
   sl.registerFactory(() => ProgrammingBloc(sl()));
@@ -99,7 +100,7 @@ Future<void> initializeDependecies() async {
     () => BookRepositoryImpl(sl(), sl(), sl()),
   );
   sl.registerLazySingleton<CommonRepositories>(
-    () => CommonRepositoriesImpl(sl(), sl()),
+    () => CommonRepositoriesImpl(sl()),
   );
 
   // info : DATASOURCE
@@ -113,6 +114,6 @@ Future<void> initializeDependecies() async {
     () => BookLocalDatasourceImpl(sl()),
   );
   sl.registerLazySingleton<CommonLocalDatasources>(
-    () => CommonLocalDatasourcesImpl(sl()),
+    () => CommonLocalDatasourcesImpl(),
   );
 }

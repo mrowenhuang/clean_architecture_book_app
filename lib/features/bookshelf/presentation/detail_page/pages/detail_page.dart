@@ -88,7 +88,11 @@ class DetailPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              Text(title.toString(), style: TextStyle(fontSize: 20)),
+              Text(
+                title.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20),
+              ),
               SizedBox(height: 5),
               Text(
                 "Author : $author",

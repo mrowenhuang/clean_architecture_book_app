@@ -5,7 +5,7 @@ class FeatureSave {
 
   FeatureSave(this._commonRepositories);
 
-  void call(List<Map<String, dynamic>> data) async {
+  void call(List<String> data) async {
     _commonRepositories.saveFeature(data);
   }
 }

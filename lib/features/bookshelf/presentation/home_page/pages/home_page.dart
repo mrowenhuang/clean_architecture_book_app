@@ -7,6 +7,7 @@ import 'package:book_app/features/auth/domain/entities/user_entities.dart';
 import 'package:book_app/features/auth/presentation/pages/switch_page.dart';
 
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/pages/bookmark_page.dart';
+import 'package:book_app/features/bookshelf/presentation/home_page/widgets/feature_switch.dart';
 import 'package:book_app/features/bookshelf/presentation/profile_page/pages/profile_page.dart';
 import 'package:book_app/features/bookshelf/presentation/search_page/pages/search_page.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_bloc/quotes_bloc.dart';
@@ -101,7 +102,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 Text(
                                   context
                                       .read<FeatureCubit>()
-                                      .activeFeature[index]['name'],
+                                      .activeFeature[index],
                                 ),
                                 SizedBox(height: 15),
                               ],
@@ -122,7 +123,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     Text(
                                       context
                                           .read<FeatureCubit>()
-                                          .deactiveFeature[index]['name'],
+                                          .deactiveFeature[index],
                                     ),
                                     GestureDetector(
                                       onTap: () {
@@ -324,7 +325,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             SizedBox(width: 5),
                                             Expanded(
                                               child: Text(
-                                                e.value['name'],
+                                                e.value,
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
                                               ),
@@ -334,6 +335,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       )
                                       .toList(),
                             );
+                          
                           },
                         ),
                       ),
@@ -367,7 +369,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       controller: tabcontroller,
                       children:
                           context.read<FeatureCubit>().activeFeature.map((e) {
-                            return e['results'] as Widget;
+                            return featureSwitch(e);
                           }).toList(),
                     );
                   },
