@@ -13,7 +13,7 @@ Book App is a Flutter-based mobile application that allows users to explore, sea
 
 ## 🖼️ Screenshots
 
-| Home & Drawer | Profile | Bookmarks |
+| Login & Register | Book Page Area | Deatil & Search |
 |---------------|---------|-----------|
 | ![Home](./assets/screenshots/Shot.png) | ![Profile](./assets/screenshots/Shot(1).png) | ![Bookmark](./assets/screenshots/Shot(2).png) |
 
