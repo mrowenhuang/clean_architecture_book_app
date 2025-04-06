@@ -21,4 +21,4 @@ Book App is a Flutter-based mobile application that allows users to explore, sea
 
 ## 📁 Project Structure
 
-```Clean Architecture
+**Clean Architecture
