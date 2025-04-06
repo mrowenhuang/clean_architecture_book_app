@@ -32,7 +32,8 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppTheme.defAppbar("Book Detail", context),
+      backgroundColor: AppColor.secondary,
+      appBar: AppTheme.customAppbar("Book Detail", context),
       body: Align(
         alignment: Alignment.center,
         child: Padding(
