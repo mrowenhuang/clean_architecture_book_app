@@ -17,7 +17,6 @@ Book App is a Flutter-based mobile application that allows users to explore, sea
 |---------------|---------|-----------|
 | ![Home](./assets/screenshots/Shot.png) | ![Profile](./assets/screenshots/Shot(1).png) | ![Bookmark](./assets/screenshots/Shot(2).png) |
 
-> Make sure to place the images inside the `assets/screenshots/` folder and update the paths accordingly.
 
 ## 🛠️ Tech Stack
 
