@@ -25,7 +25,7 @@ class SignupPage extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
-            Image.asset("assets/logo/logo_b.png", height: 400),
+            Image.asset("assets/logo/logo_b.png", height: 300),
             Text("Good Morning", style: TextStyle(fontSize: 24)),
             SizedBox(height: 20),
             titleTextField("Username", "John Doe", nameC),
@@ -37,9 +37,7 @@ class SignupPage extends StatelessWidget {
             BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 if (state is SuccessSignupAuthState) {
-                  AppNavigator.pushRemove(context, HomePage(
-                    user: state.user,
-                  ));
+                  AppNavigator.pushRemove(context, HomePage(user: state.user));
                 } else if (state is ErrorSignupAuthState) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

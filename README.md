@@ -1,16 +1,24 @@
-# book_app
+# 📚 Book App
 
-A new Flutter project.
+Book App is a Flutter-based mobile application that allows users to explore, search, and bookmark their favorite books. The UI is designed to be clean, modern, and user-friendly.
 
-## Getting Started
+## ✨ Features
 
-This project is a starting point for a Flutter application.
+- 🔍 **Search Books**: Search for books using keywords.
+- 📚 **Explore Categories**: Browse books by categories such as Trending, Romance, Textbook, and more.
+- 📌 **Bookmark**: Save your favorite books to access them later.
+- 👤 **Profile Page**: View user details and manage active features.
+- 🔐 **Login & Register**: User authentication with a clean and simple interface.
+- ⚙️ **Settings Drawer**: Enable or disable features based on user preferences.
 
-A few resources to get you started if this is your first Flutter project:
+## 🖼️ Screenshots
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+| Home & Drawer | Profile | Bookmarks |
+|---------------|---------|-----------|
+| ![Home](./assets/screenshots/Shot.png) | ![Profile](./assets/screenshots/Shot(1).png) | ![Bookmark](./assets/screenshots/Shot(2).png) |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> Make sure to place the images inside the `assets/screenshots/` folder and update the paths accordingly.
+
+## 📁 Project Structure
+
+```Clean Architecture

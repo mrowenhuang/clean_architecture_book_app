@@ -1,5 +1,6 @@
 import 'package:book_app/common/favorite/cubit/fav_cubit.dart';
 import 'package:book_app/core/config/app_color.dart';
+import 'package:book_app/core/config/app_theme.dart';
 import 'package:book_app/features/bookshelf/domain/entities/bookmark_entities.dart';
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/detail_page/bloc/detail_bloc.dart';
@@ -31,33 +32,11 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Book Detail",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: AppColor.primary,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            size: 30,
-            color: AppColor.primary,
-          ),
-        ),
-      ),
+      appBar: AppTheme.defAppbar("Book Detail", context),
       body: Align(
         alignment: Alignment.center,
         child: Padding(
-          padding: EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 20),
+          padding: AppTheme.mocPadding,
           child: Column(
             children: [
               Container(

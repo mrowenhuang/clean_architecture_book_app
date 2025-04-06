@@ -2,6 +2,7 @@ import 'package:book_app/common/favorite/cubit/fav_cubit.dart';
 import 'package:book_app/common/navigator/app_navigator.dart';
 import 'package:book_app/common/time/time.dart';
 import 'package:book_app/core/config/app_color.dart';
+import 'package:book_app/core/config/app_theme.dart';
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/detail_page/pages/detail_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,31 +18,9 @@ class BookmarkPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.secondary,
-      appBar: AppBar(
-        title: Text(
-          "Bookmark",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: AppColor.primary,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            size: 30,
-            color: AppColor.primary,
-          ),
-        ),
-      ),
+      appBar: AppTheme.defAppbar("Bookmark", context),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: AppTheme.defPadding,
         child: Column(
           children: [
             Align(
@@ -52,6 +31,7 @@ class BookmarkPage extends StatelessWidget {
               child: BlocBuilder<BookmarkBloc, BookmarkState>(
                 bloc: context.read<BookmarkBloc>()..add(GetBookmarkEvent()),
                 builder: (context, state) {
+                  print(state);
                   if (state is LoadingGetBookmarkState) {
                     return Center(
                       child: CupertinoActivityIndicator(
@@ -74,7 +54,6 @@ class BookmarkPage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         itemBuilder: (context, index) {
                           var data = state.books[index];
-                          // ! masalah di sini
                           return Padding(
                             padding: EdgeInsets.only(top: index == 1 ? 40 : 0),
                             child: Stack(

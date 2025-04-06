@@ -51,6 +51,7 @@ class FeatureCubit extends Cubit<FeatureState> {
           activeFeature = response;
           emit(SuccessGetFeatureState());
         }
+        emit(SuccessGetFeatureState());
       },
     );
   }

@@ -1,6 +1,7 @@
 import 'package:book_app/common/favorite/cubit/fav_cubit.dart';
 import 'package:book_app/common/navigator/app_navigator.dart';
 import 'package:book_app/core/config/app_color.dart';
+import 'package:book_app/core/config/app_theme.dart';
 import 'package:book_app/features/bookshelf/domain/entities/bookmark_entities.dart';
 import 'package:book_app/features/bookshelf/presentation/bookmark_page/bloc/bookmark_bloc.dart';
 import 'package:book_app/features/bookshelf/presentation/detail_page/pages/detail_page.dart';
@@ -20,31 +21,9 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.secondary,
-      appBar: AppBar(
-        title: Text(
-          "Search",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: AppColor.primary,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            size: 30,
-            color: AppColor.primary,
-          ),
-        ),
-      ),
+      appBar: AppTheme.defAppbar("Search", context),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: AppTheme.defPadding,
         child: Column(
           children: [
             Material(

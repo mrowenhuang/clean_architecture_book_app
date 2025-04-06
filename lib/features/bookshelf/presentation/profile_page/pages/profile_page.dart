@@ -1,5 +1,6 @@
 import 'package:book_app/common/navigator/app_navigator.dart';
 import 'package:book_app/core/config/app_color.dart';
+import 'package:book_app/core/config/app_theme.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
 import 'package:book_app/features/auth/presentation/pages/switch_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,36 +15,13 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.secondary,
-      appBar: AppBar(
-        title: Text(
-          "Profile",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: AppColor.primary,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            size: 30,
-            color: AppColor.primary,
-          ),
-        ),
-      ),
+      appBar: AppTheme.defAppbar("Profile", context),
       body: Padding(
-        padding: EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 20),
+        padding: AppTheme.defPadding,
         child: Column(
           children: [
             Hero(
               tag: "profile-image",
-
               child: Material(
                 elevation: 6,
                 borderRadius: BorderRadius.circular(100),

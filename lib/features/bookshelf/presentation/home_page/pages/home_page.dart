@@ -3,6 +3,7 @@ import 'package:book_app/common/navigator/app_navigator.dart';
 import 'package:book_app/common/time/time.dart';
 import 'package:book_app/core/config/app_color.dart';
 import 'package:book_app/common/indicator/cubit/indicator_cubit.dart';
+import 'package:book_app/core/config/app_theme.dart';
 import 'package:book_app/features/auth/domain/entities/user_entities.dart';
 import 'package:book_app/features/auth/presentation/pages/switch_page.dart';
 
@@ -12,6 +13,7 @@ import 'package:book_app/features/bookshelf/presentation/profile_page/pages/prof
 import 'package:book_app/features/bookshelf/presentation/search_page/pages/search_page.dart';
 import 'package:book_app/features/bookshelf/presentation/home_page/bloc/quotes_bloc/quotes_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
@@ -177,7 +179,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: AppTheme.defPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -285,57 +287,65 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         child: BlocBuilder<FeatureCubit, FeatureState>(
                           bloc: context.read<FeatureCubit>(),
                           builder: (context, state) {
-                            return TabBar(
-                              controller: tabcontroller,
-                              labelStyle: TextStyle(fontSize: 16),
-                              labelColor: AppColor.primary,
-                              unselectedLabelColor: Colors.black45,
-                              indicatorColor: Colors.transparent,
-                              labelPadding: EdgeInsets.zero,
-                              overlayColor: WidgetStateProperty.all(
-                                Colors.transparent,
-                              ),
-                              onTap: (value) {
-                                context
-                                    .read<IndicatorCubit>()
-                                    .setActiveIndicatorValue(value);
-                              },
-                              tabs:
+                            if (state is LoadingGetFeatureState ||
+                                state is LoadingAddandRemoveFeatureState) {
+                              return CupertinoActivityIndicator();
+                            } else if (state is SuccessGetFeatureState ||
+                                state is SuccessAddandRemoveFeatureState) {
+                              return TabBar(
+                                controller: tabcontroller,
+                                labelStyle: TextStyle(fontSize: 16),
+                                labelColor: AppColor.primary,
+                                unselectedLabelColor: Colors.black45,
+                                indicatorColor: Colors.transparent,
+                                labelPadding: EdgeInsets.zero,
+                                overlayColor: WidgetStateProperty.all(
+                                  Colors.transparent,
+                                ),
+                                onTap: (value) {
                                   context
-                                      .read<FeatureCubit>()
-                                      .activeFeature
-                                      .asMap()
-                                      .entries
-                                      .map(
-                                        (e) => Row(
-                                          children: [
-                                            Container(
-                                              width: 5,
-                                              height: 15,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    indicatorState.activeVal ==
-                                                            e.key
-                                                        ? AppColor.primary
-                                                        : Colors.transparent,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
+                                      .read<IndicatorCubit>()
+                                      .setActiveIndicatorValue(value);
+                                },
+                                tabs:
+                                    context
+                                        .read<FeatureCubit>()
+                                        .activeFeature
+                                        .asMap()
+                                        .entries
+                                        .map(
+                                          (e) => Row(
+                                            children: [
+                                              Container(
+                                                width: 5,
+                                                height: 15,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      indicatorState
+                                                                  .activeVal ==
+                                                              e.key
+                                                          ? AppColor.primary
+                                                          : Colors.transparent,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(width: 5),
-                                            Expanded(
-                                              child: Text(
-                                                e.value,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
+                                              SizedBox(width: 5),
+                                              Expanded(
+                                                child: Text(
+                                                  e.value,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                      .toList(),
-                            );
-                          
+                                            ],
+                                          ),
+                                        )
+                                        .toList(),
+                              );
+                            }
+                            return SizedBox();
                           },
                         ),
                       ),
